@@ -13,6 +13,7 @@ import { take, of, map } from 'rxjs';
 })
 export class TopicMilestonesComponent implements OnInit {
   @Input() topic!: Topic;
+  @Input() isStatusClosed!: boolean;
   event = {
     subject: '',
     text: '',
@@ -108,22 +109,5 @@ export class TopicMilestonesComponent implements OnInit {
           });
       }
     });
-    /*
-        this.ngDialog
-          .openConfirm({
-            template: '/views/modals/topic_event_delete_confirm.html',
-            data: {
-              event: event
-            }
-          })
-          .then(() => {
-            event.topicId = this.topic.id;
-            this.TopicEventService
-              .delete(event)
-              .then(() => {
-                this.init();
-              });
-          }, angular.noop);*/
-
   }
 }

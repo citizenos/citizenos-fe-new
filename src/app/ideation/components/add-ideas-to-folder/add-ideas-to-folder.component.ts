@@ -66,7 +66,7 @@ export class AddIdeasToFolderComponent {
         .pipe(take(1))
         .subscribe({
           next: (res) => {
-            this.TopicIdeaService.reloadIdeas();
+            this.TopicIdeaService.reload();
             this.dialogRef.close();
           },
           error: (err) => {

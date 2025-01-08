@@ -32,10 +32,10 @@ export class TopicRequestsComponent {
     this.GroupRequestTopicService.accept(reqData).pipe(take(1)).subscribe(() => {
       this.Notification.removeAll();
       this.Notification.addSuccess('COMPONENTS.TOPIC_REQUESTS.MSG_ACCEPT_SUCCESS');
-      this.GroupRequestTopicService.reloadItems();
+      this.GroupRequestTopicService.reload();
       this.GroupMemberTopicService.reset();
       this.GroupMemberTopicService.setParam('groupId', this.group.id);
-      this.GroupService.reloadGroup();
+      this.GroupService.reload();
     });
   }
   reject(request: any) {
@@ -43,8 +43,8 @@ export class TopicRequestsComponent {
     this.GroupRequestTopicService.reject(reqData).pipe(take(1)).subscribe(() => {
       this.Notification.removeAll();
       this.Notification.addSuccess('COMPONENTS.TOPIC_REQUESTS.MSG_REJECT_SUCCESS');
-      this.GroupRequestTopicService.reloadItems();
-      this.GroupService.reloadGroup()
+      this.GroupRequestTopicService.reload();
+      this.GroupService.reload()
     });
   }
 }

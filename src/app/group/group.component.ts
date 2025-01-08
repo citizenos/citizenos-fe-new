@@ -155,7 +155,7 @@ export class GroupComponent implements OnInit {
     public app: AppService,
     public GroupMemberTopicService: GroupMemberTopicService) {
     this.app.darkNav = true;
-    this.users$ = combineLatest([this.searchUserString$, this.GroupMemberUserService.loadMembers$]).pipe(
+    this.users$ = combineLatest([this.searchUserString$, this.GroupMemberUserService.reload$]).pipe(
       switchMap(([search]) => {
         GroupMemberUserService.reset();
         GroupMemberUserService.setParam('groupId', this.groupId);
@@ -432,7 +432,7 @@ export class GroupComponent implements OnInit {
     if (this.app.group) {
       const inviteDialog = this.dialog.open(GroupInviteDialogComponent, { data: { group: group } });
       inviteDialog.afterClosed().subscribe(result => {
-        this.GroupInviteUserService.reloadItems();
+        this.GroupInviteUserService.reload();
       });
     }
   }
@@ -488,7 +488,7 @@ export class GroupComponent implements OnInit {
 
     settingsDialog.afterClosed().subscribe(result => {
       if (result === true) {
-        this.GroupService.reloadGroup();
+        this.GroupService.reload();
       }
     });
   }
@@ -558,7 +558,7 @@ export class GroupComponent implements OnInit {
             {
               next: (res) => {
                 group.userLevel = res.userLevel;
-                this.GroupService.reloadGroup();
+                this.GroupService.reload();
               },
               error: (err) => {
                 console.error('Failed to join Topic', err)
@@ -649,7 +649,7 @@ export class GroupComponent implements OnInit {
                   .pipe(take(1))
                   .subscribe({
                     next: () => {
-                      this.GroupMemberUserService.reloadItems();
+                      this.GroupMemberUserService.resetPage();
                     },
                     error: (err) => {
                       console.error(err);
@@ -662,7 +662,7 @@ export class GroupComponent implements OnInit {
                 .pipe(take(1))
                 .subscribe({
                   next: (res) => {
-                    this.GroupMemberUserService.reloadItems();
+                    this.GroupMemberUserService.resetPage();
                   },
                   error: (err) => {
                     console.log(err);
@@ -693,7 +693,7 @@ export class GroupComponent implements OnInit {
             .pipe(take(1))
             .subscribe({
               next: () => {
-                this.GroupMemberUserService.reloadItems();
+                this.GroupMemberUserService.resetPage();
               },
               error: (err) => {
                 member.level = oldLevel
@@ -711,7 +711,7 @@ export class GroupComponent implements OnInit {
             .pipe(take(1))
             .subscribe({
               next: () => {
-                this.GroupMemberUserService.reloadItems();
+                this.GroupMemberUserService.resetPage();
               },
               error: (err) => {
                 member.level = oldLevel

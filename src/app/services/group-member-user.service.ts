@@ -13,21 +13,16 @@ export class GroupMemberUserService extends ItemsListService {
   params = Object.assign(this.defaultParams, {groupId: <string | null>null, include: <Array<string> | string | null>null });
   params$ = new BehaviorSubject(this.params);
   public LEVELS = ['read','admin'];
-  public loadMembers$ = new BehaviorSubject<void>(undefined);
 
   constructor(private Location: LocationService, private http: HttpClient, private Auth: AuthService) {
     super ();
-    this.items$ = this.loadMembers$.pipe(
+    this.items$ = this.reload$.pipe(
       exhaustMap(() => this.loadItems()),
       shareReplay()
     );
   }
 
-  reloadItems(): void {
-    this.loadMembers$.next();
-  }
-
-  reload() {
+  resetPage() {
     this.params$.value.offset = 0;
     this.params$.value.page = 1;
     this.items$ = of([]);

@@ -49,7 +49,7 @@ export class ArgumentReplyComponent {
       .save(reply)
       .pipe(take(1))
       .subscribe((reply) => {
-        this.TopicArgumentService.reloadArguments();
+        this.TopicArgumentService.reload();
         this.router.navigate(['/', 'topics', this.topicId], { queryParams: { argumentId: reply.id + "_v0" } });
       });
 

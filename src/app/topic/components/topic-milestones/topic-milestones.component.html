@@ -144,99 +144,54 @@
         </div>
       </ng-container>
     </div>
-    <div class="milestone" *ngIf="canDelete()">
-      <div class="milestone_header">
-        <div class="title_wrap">
-          <div class="circle">{{countTotal+1}}</div>
-          <div class="small_heading" translate="COMPONENTS.TOPIC_MILESTONES.HEADING_MILESTONE"></div>
-        </div>
-      </div>
-      <div class="section_content">
-        <div class="heading" translate="COMPONENTS.TOPIC_MILESTONES.HEADING_MILESTONE_TITLE"></div>
-        <cos-input [placeholder]="'COMPONENTS.TOPIC_MILESTONES.PLACEHOLDER_SUBJECT' | translate">
-          <input id="create_milestone_title" [(ngModel)]="event.subject" [ngClass]="{'error_input': errors?.subject}"
-            translate [placeholder]="'COMPONENTS.TOPIC_MILESTONES.PLACEHOLDER_SUBJECT' | translate" class="gray_borders"
-            [maxlength]="maxLengthSubject" required>
-          <label for="create_milestone_title" class="error_label" *ngIf="errors?.subject">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M8.89438 1.78863C8.52586 1.05158 7.47405 1.05158 7.10553 1.78863L0.723562 14.5526C0.391112 15.2175 0.874608 15.9998 1.61799 15.9998H14.3819C15.1253 15.9998 15.6088 15.2175 15.2763 14.5526L8.89438 1.78863ZM6.99996 6.99977C6.99996 6.44749 7.44767 5.99977 7.99996 5.99977C8.55224 5.99977 8.99996 6.44749 8.99996 6.99977V9.99977C8.99996 10.5521 8.55224 10.9998 7.99996 10.9998C7.44767 10.9998 6.99996 10.5521 6.99996 9.99977V6.99977ZM6.99996 12.9998C6.99996 12.4475 7.44767 11.9998 7.99996 11.9998C8.55224 11.9998 8.99996 12.4475 8.99996 12.9998C8.99996 13.5521 8.55224 13.9998 7.99996 13.9998C7.44767 13.9998 6.99996 13.5521 6.99996 12.9998Z"
-                fill="#EF4025" />
-            </svg>
-            <span translate="{{errors.subject}}"></span>
-          </label>
-        </cos-input>
-        <div class="heading" translate="COMPONENTS.TOPIC_MILESTONES.HEADING_MILESTONE_CONTENT"></div>
-        <cos-input [placeholder]="'VIEWS.TOPICS_TOPICID.ADD_MILESTONES_PLACEHOLDER_TEXT' | translate">
-          <textarea id="create_milestone_textarea" class="gray_borders" [ngClass]="{'error_input': errors?.text}"
-            [(ngModel)]="event.text" [placeholder]="'VIEWS.TOPICS_TOPICID.ADD_MILESTONES_PLACEHOLDER_TEXT' | translate"
-            [maxlength]="maxLengthText" required></textarea>
 
-          <label for="create_milestone_textarea" class="error_label" *ngIf="errors?.text">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M8.89438 1.78863C8.52586 1.05158 7.47405 1.05158 7.10553 1.78863L0.723562 14.5526C0.391112 15.2175 0.874608 15.9998 1.61799 15.9998H14.3819C15.1253 15.9998 15.6088 15.2175 15.2763 14.5526L8.89438 1.78863ZM6.99996 6.99977C6.99996 6.44749 7.44767 5.99977 7.99996 5.99977C8.55224 5.99977 8.99996 6.44749 8.99996 6.99977V9.99977C8.99996 10.5521 8.55224 10.9998 7.99996 10.9998C7.44767 10.9998 6.99996 10.5521 6.99996 9.99977V6.99977ZM6.99996 12.9998C6.99996 12.4475 7.44767 11.9998 7.99996 11.9998C8.55224 11.9998 8.99996 12.4475 8.99996 12.9998C8.99996 13.5521 8.55224 13.9998 7.99996 13.9998C7.44767 13.9998 6.99996 13.5521 6.99996 12.9998Z"
-                fill="#EF4025" />
-            </svg>
-            <span translate="{{errors.text}}"></span>
-          </label>
-        </cos-input>
+		<ng-container *ngIf="!isStatusClosed">
+			<div class="milestone" *ngIf="canDelete()">
+				<div class="milestone_header">
+					<div class="title_wrap">
+						<div class="circle">{{countTotal+1}}</div>
+						<div class="small_heading" translate="COMPONENTS.TOPIC_MILESTONES.HEADING_MILESTONE"></div>
+					</div>
+				</div>
+				<div class="section_content">
+					<div class="heading" translate="COMPONENTS.TOPIC_MILESTONES.HEADING_MILESTONE_TITLE"></div>
+					<cos-input [placeholder]="'COMPONENTS.TOPIC_MILESTONES.PLACEHOLDER_SUBJECT' | translate">
+						<input id="create_milestone_title" [(ngModel)]="event.subject" [ngClass]="{'error_input': errors?.subject}"
+							translate [placeholder]="'COMPONENTS.TOPIC_MILESTONES.PLACEHOLDER_SUBJECT' | translate" class="gray_borders"
+							[maxlength]="maxLengthSubject" required>
+						<label for="create_milestone_title" class="error_label" *ngIf="errors?.subject">
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" clip-rule="evenodd"
+									d="M8.89438 1.78863C8.52586 1.05158 7.47405 1.05158 7.10553 1.78863L0.723562 14.5526C0.391112 15.2175 0.874608 15.9998 1.61799 15.9998H14.3819C15.1253 15.9998 15.6088 15.2175 15.2763 14.5526L8.89438 1.78863ZM6.99996 6.99977C6.99996 6.44749 7.44767 5.99977 7.99996 5.99977C8.55224 5.99977 8.99996 6.44749 8.99996 6.99977V9.99977C8.99996 10.5521 8.55224 10.9998 7.99996 10.9998C7.44767 10.9998 6.99996 10.5521 6.99996 9.99977V6.99977ZM6.99996 12.9998C6.99996 12.4475 7.44767 11.9998 7.99996 11.9998C8.55224 11.9998 8.99996 12.4475 8.99996 12.9998C8.99996 13.5521 8.55224 13.9998 7.99996 13.9998C7.44767 13.9998 6.99996 13.5521 6.99996 12.9998Z"
+									fill="#EF4025" />
+							</svg>
+							<span translate="{{errors.subject}}"></span>
+						</label>
+					</cos-input>
+					<div class="heading" translate="COMPONENTS.TOPIC_MILESTONES.HEADING_MILESTONE_CONTENT"></div>
+					<cos-input [placeholder]="'VIEWS.TOPICS_TOPICID.ADD_MILESTONES_PLACEHOLDER_TEXT' | translate">
+						<textarea id="create_milestone_textarea" class="gray_borders" [ngClass]="{'error_input': errors?.text}"
+							[(ngModel)]="event.text" [placeholder]="'VIEWS.TOPICS_TOPICID.ADD_MILESTONES_PLACEHOLDER_TEXT' | translate"
+							[maxlength]="maxLengthText" required></textarea>
 
-      </div>
-    </div>
+						<label for="create_milestone_textarea" class="error_label" *ngIf="errors?.text">
+							<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path fill-rule="evenodd" clip-rule="evenodd"
+									d="M8.89438 1.78863C8.52586 1.05158 7.47405 1.05158 7.10553 1.78863L0.723562 14.5526C0.391112 15.2175 0.874608 15.9998 1.61799 15.9998H14.3819C15.1253 15.9998 15.6088 15.2175 15.2763 14.5526L8.89438 1.78863ZM6.99996 6.99977C6.99996 6.44749 7.44767 5.99977 7.99996 5.99977C8.55224 5.99977 8.99996 6.44749 8.99996 6.99977V9.99977C8.99996 10.5521 8.55224 10.9998 7.99996 10.9998C7.44767 10.9998 6.99996 10.5521 6.99996 9.99977V6.99977ZM6.99996 12.9998C6.99996 12.4475 7.44767 11.9998 7.99996 11.9998C8.55224 11.9998 8.99996 12.4475 8.99996 12.9998C8.99996 13.5521 8.55224 13.9998 7.99996 13.9998C7.44767 13.9998 6.99996 13.5521 6.99996 12.9998Z"
+									fill="#EF4025" />
+							</svg>
+							<span translate="{{errors.text}}"></span>
+						</label>
+					</cos-input>
 
-    <div class="section_buttons" *ngIf="canDelete()">
+				</div>
+			</div>
 
-      <!--div id="add_section_wrap">
-        <button class="btn_medium_plain bold">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12 16C11.4711 16 11.0423 15.5712 11.0423 15.0423L11.0423 12.9577H8.95775C8.4288 12.9577 8 12.5289 8 12C8 11.4711 8.4288 11.0423 8.95775 11.0423H11.0423V8.95775C11.0423 8.4288 11.4711 8 12 8C12.5289 8 12.9577 8.4288 12.9577 8.95775V11.0423L15.0423 11.0423C15.5712 11.0423 16 11.4711 16 12C16 12.5289 15.5712 12.9577 15.0423 12.9577H12.9577V15.0423C12.9577 15.5712 12.5289 16 12 16Z"
-              fill="#2C3B47" />
-          </svg>
-          <span>Add</span>
-        </button>
-        <div class="vertical_line_separator"></div>
-        <button class="btn_medium_plain icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M4.5 6C4.5 5.58579 4.83579 5.25 5.25 5.25L18.75 5.25C19.1642 5.25 19.5 5.58579 19.5 6C19.5 6.41421 19.1642 6.75 18.75 6.75L5.25 6.75C4.83579 6.75 4.5 6.41421 4.5 6Z"
-              fill="#2C3B47" />
-            <path
-              d="M4.5 9C4.5 8.58579 4.83579 8.25 5.25 8.25L18.75 8.25C19.1642 8.25 19.5 8.58579 19.5 9C19.5 9.41421 19.1642 9.75 18.75 9.75L5.25 9.75C4.83579 9.75 4.5 9.41421 4.5 9Z"
-              fill="#2C3B47" />
-            <path
-              d="M5.25 11.25C4.83579 11.25 4.5 11.5858 4.5 12C4.5 12.4142 4.83579 12.75 5.25 12.75L18.75 12.75C19.1642 12.75 19.5 12.4142 19.5 12C19.5 11.5858 19.1642 11.25 18.75 11.25L5.25 11.25Z"
-              fill="#2C3B47" />
-            <path
-              d="M4.5 15C4.5 14.5858 4.83579 14.25 5.25 14.25L18.75 14.25C19.1642 14.25 19.5 14.5858 19.5 15C19.5 15.4142 19.1642 15.75 18.75 15.75L5.25 15.75C4.83579 15.75 4.5 15.4142 4.5 15Z"
-              fill="#2C3B47" />
-            <path
-              d="M5.25 17.25C4.83579 17.25 4.5 17.5858 4.5 18C4.5 18.4142 4.83579 18.75 5.25 18.75H12.75C13.1642 18.75 13.5 18.4142 13.5 18C13.5 17.5858 13.1642 17.25 12.75 17.25H5.25Z"
-              fill="#2C3B47" />
-          </svg>
-
-        </button>
-        <button class="btn_medium_plain icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M12.5382 7.03922L12.1471 5L7 5L7 11.1961L14.084 11.1961L14.4751 13.2353H17.6667V7.03922L12.5382 7.03922ZM19.6667 5.03922V15.2353H12.8222L12.4311 13.1961L6.95556 13.1961L6.95556 20.3333H5L5 3L13.8 3L14.1911 5.03922H19.6667Z"
-              fill="#2C3B47" />
-          </svg>
-
-        </button>
-        <button class="btn_medium_plain icon">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M13.1034 4.82745L5.86207 12.0688C5.29074 12.6402 5.29074 13.5665 5.86207 14.1378V14.1378C6.4334 14.7091 7.35971 14.7091 7.93103 14.1378L15.8621 6.20676C17.0047 5.0641 17.0047 3.21149 15.8621 2.06883V2.06883C14.7194 0.926172 12.8668 0.926172 11.7241 2.06883L3.10345 10.6895C1.38946 12.4035 1.38946 15.1824 3.10345 16.8964V16.8964C4.81743 18.6104 7.59636 18.6104 9.31034 16.8964L17.2414 8.96538"
-              stroke="#2C3B47" stroke-width="2" stroke-linecap="round" />
-          </svg>
-        </button>
-      </!--div-->
-      <button class="btn_medium_submit bold" translate="COMPONENTS.TOPIC_MILESTONES.ADD_MILESTONE"
-        (click)="submitEvent()">
-      </button>
-    </div>
-
+			<div class="section_buttons" *ngIf="canDelete()">
+				<button class="btn_medium_submit bold" translate="COMPONENTS.TOPIC_MILESTONES.ADD_MILESTONE"
+					(click)="submitEvent()">
+				</button>
+			</div>
+	  </ng-container>
   </div>
 </div>

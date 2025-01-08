@@ -496,7 +496,7 @@
             <div class="follow_up_wrap" #topicFollowUp>
               <ng-container *ngIf="events$ | async as events;">
                 <ng-container
-                  *ngIf="(!events.length && !canUpdate(topic)) || topic.status !== TopicService.STATUSES.followUp">
+                  *ngIf="events.length === 0 && (!canUpdate(topic) || topic.status !== TopicService.STATUSES.followUp)">
                   <div class="topic_feature_section follow_up" [ngClass]="(tabTablet === 'followUp')? 'show': ''">
                     <div class="no_feature_yet">
                       <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -577,7 +577,7 @@
                 <ng-container
                   *ngIf="events.length || (topic.status === TopicService.STATUSES.followUp && canUpdate(topic))">
                   <topic-milestones [topic]="topic"
-                    [ngClass]="(tabTablet === 'followUp')? 'show': ''"></topic-milestones>
+                    [ngClass]="(tabTablet === 'followUp')? 'show': ''" [isStatusClosed]="topic.status === TopicService.STATUSES.closed"></topic-milestones>
                 </ng-container>
               </ng-container>
             </div>
@@ -947,9 +947,9 @@
                 <a class="manage_link" (click)="manageParticipants(topic)" translate="VIEWS.TOPICS_TOPICID.LNK_MANAGE"
                   *ngIf="canUpdate(topic)"></a>
               </div>
-              <div class="participants_count_wrap">
-                <div class="participants_count">{{topic.members.users.count}}</div>
-                <div class="avatars_wrap" *ngIf="members$ | async as members">
+              <div class="participants_count_wrap" *ngIf="members$ | async as members">
+                <div class="participants_count">{{members.length || topic.members.users.count}}</div>
+                <div class="avatars_wrap">
                   <ng-container *ngFor="let index  of [0, 1, 2];">
                     <div class="avatar" *ngIf="members[index]">
                       <img *ngIf="members[index].imageUrl" [src]="members[index].imageUrl" />
@@ -977,7 +977,7 @@
               </div>
               <div class="info_item" translate="VIEWS.TOPICS_TOPICID.SECTION_NOTIFICATIONS_DESC">
               </div>
-              <button *ngIf="TopicService.canDelete(topic)" class="btn_medium_secondary bold"
+              <button class="btn_medium_secondary bold"
                 (click)="app.doShowTopicNotificationSettings(topic.id)">
                 <div class="icon">
                   <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">

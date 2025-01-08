@@ -85,14 +85,14 @@ export class TopicIdeationComponent {
   ) { }
 
   ngOnInit(): void {
-
-    this.ideas$ = combineLatest([this.ideaTypeFilter$, this.orderFilter$, this.ideaParticipantsFilter$, this.folderFilter$, this.ideaSearchFilter$, this.TopicIdeaService.loadIdeas$])
+    this.ideas$ = combineLatest([this.ideaTypeFilter$, this.orderFilter$, this.ideaParticipantsFilter$, this.folderFilter$, this.ideaSearchFilter$, this.TopicIdeaService.reload$])
       .pipe(
         switchMap(([typeFilter, orderFilter, participantFilter, folderFilter, search, load]) => {
-          this.TopicIdeaService.setParam('topicId', this.topic.id);
           this.TopicIdeaService.reset();
           this.TopicIdeaService.setParam('topicId', this.topic.id);
           this.TopicIdeaService.setParam('ideationId', this.topic.ideationId);
+          this.TopicIdeaService.setParam('offset', 0);
+          this.TopicIdeaService.setParam('limit', 15);
           this.allIdeas$ = [];
           if (typeFilter) {
             if (['favourite', 'showModerated'].indexOf(typeFilter) > -1) {
@@ -350,7 +350,7 @@ export class TopicIdeationComponent {
       }
     });
     ideationDeadlineDialog.afterClosed().subscribe(() => {
-      this.TopicIdeationService.reloadIdeation();
+      this.TopicIdeationService.reload();
     })
   }
 
@@ -379,6 +379,7 @@ export class TopicIdeationComponent {
 
     folderCreateDialog.afterClosed().subscribe(() => {
       this.loadFolders$.next();
+      this.TopicIdeaService.page$.next(1);
     });
   };
 

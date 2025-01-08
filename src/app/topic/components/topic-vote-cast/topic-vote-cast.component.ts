@@ -7,6 +7,7 @@ import { NotificationService } from '@services/notification.service';
 import { TopicService } from '@services/topic.service';
 import { TopicVoteService } from '@services/topic-vote.service';
 import { VoteDelegationService } from '@services/vote-delegation.service';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 import { DialogService } from 'src/app/shared/dialog';
 import { take } from 'rxjs';
 import { TopicVoteSignComponent } from '../topic-vote-sign/topic-vote-sign.component';
@@ -37,14 +38,15 @@ export class TopicVoteCastComponent implements OnInit {
 
   constructor(
     public app: AppService,
-    private dialog: DialogService,
-    private Notification: NotificationService,
+    private readonly dialog: DialogService,
+    private readonly Notification: NotificationService,
     public AuthService: AuthService,
-    private TopicService: TopicService,
-    private TopicVoteService: TopicVoteService,
-    private TopicIdeaService: TopicIdeaService,
-    private route: ActivatedRoute,
-    private VoteDelegationService: VoteDelegationService
+    private readonly TopicService: TopicService,
+    private readonly TopicVoteService: TopicVoteService,
+    private readonly TopicIdeaService: TopicIdeaService,
+    private readonly route: ActivatedRoute,
+    private readonly VoteDelegationService: VoteDelegationService,
+    private readonly TopicMemberUserService: TopicMemberUserService
   ) { }
 
   ngOnInit(): void {
@@ -136,6 +138,7 @@ export class TopicVoteCastComponent implements OnInit {
                 this.topic.vote = vote;
                 this.TopicService.reloadTopic()
                 this.TopicVoteService.reloadVote();
+                this.TopicMemberUserService.reload();
               },
               error: (err) => {
                 console.error(err);

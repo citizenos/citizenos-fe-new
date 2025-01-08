@@ -6,6 +6,7 @@ import { Argument } from 'src/app/interfaces/argument';
 import { AuthService } from '@services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 
 @Component({
   selector: 'idea-reply-form',
@@ -31,8 +32,14 @@ export class IdeaReplyFormComponent {
   ARGUMENT_TYPES_MAXLENGTH = this.TopicIdeaRepliesService.ARGUMENT_TYPES_MAXLENGTH;
   ARGUMENT_SUBJECT_MAXLENGTH = this.TopicIdeaRepliesService.ARGUMENT_SUBJECT_MAXLENGTH;
   errors = <any>null;
-  constructor(public AuthService: AuthService, private TopicIdeaRepliesService: TopicIdeaRepliesService, private translate: TranslateService, private Notification: NotificationService,
-    private router: Router, private activatedRoute: ActivatedRoute
+  constructor(
+    public AuthService: AuthService,
+    private readonly TopicIdeaRepliesService: TopicIdeaRepliesService,
+    private readonly translate: TranslateService,
+    private readonly Notification: NotificationService,
+    private readonly TopicMemberUserService: TopicMemberUserService,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute
   ) {
     this.AuthService.loggedIn$.pipe(
       map((isLoggedIn) => {
@@ -69,7 +76,8 @@ export class IdeaReplyFormComponent {
       .save(reply)
       .pipe(take(1))
       .subscribe((reply) => {
-        this.TopicIdeaRepliesService.reloadArguments();
+        this.TopicIdeaRepliesService.reload();
+        this.TopicMemberUserService.reload();
         this.Notification.addSuccess('COMPONENTS.IDEA_REPLY_FORM.MSG_SUCCESS');
         this.showRepliesChange.emit(true);
         this.close();
@@ -105,7 +113,8 @@ export class IdeaReplyFormComponent {
       .update(reply)
       .pipe(take(1))
       .subscribe((reply) => {
-        this.TopicIdeaRepliesService.reloadArguments();
+        this.TopicIdeaRepliesService.reload();
+        this.TopicMemberUserService.reload();
         this.showRepliesChange.emit(true);
         this.close();
         this.router.navigate(
@@ -116,10 +125,6 @@ export class IdeaReplyFormComponent {
             queryParamsHandling: 'merge',
           }
         );
-        /* return this.$state.go(
-           this.$state.current.name,
-           { commentId: this.getCommentIdWithVersion(comment.id, comment.edits.length - 1) }
-         );*/
       });
   }
   close () {

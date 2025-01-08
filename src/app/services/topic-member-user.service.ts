@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocationService } from './location.service';
-import { Observable, BehaviorSubject, map, take } from 'rxjs';
+import { BehaviorSubject, map, take } from 'rxjs';
 import { ApiResponse } from 'src/app/interfaces/apiResponse';
 import { ItemsListService } from './items-list.service';
 import { AuthService } from './auth.service';
@@ -14,9 +14,9 @@ import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog
   providedIn: 'root'
 })
 export class TopicMemberUserService extends ItemsListService {
-  params = Object.assign({ topicId: <string>'' }, this.defaultParams);
+  params = { ...{ topicId: <string>'' }, ...this.defaultParams };
   params$ = new BehaviorSubject(this.params);
-  constructor(private dialog: DialogService, private Location: LocationService, private http: HttpClient, private AuthService: AuthService, private router: Router) {
+  constructor(private readonly dialog: DialogService, private readonly  Location: LocationService, private http: HttpClient, private AuthService: AuthService, private router: Router) {
     super();
     this.items$ = this.loadItems();
   }

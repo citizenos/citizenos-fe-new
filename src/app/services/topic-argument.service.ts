@@ -64,7 +64,6 @@ export class TopicArgumentService extends ItemsListService {
     poi: 0,
     reply: 0
   });
-  public loadArguments$ = new BehaviorSubject<void>(undefined);
 
   constructor(private readonly http: HttpClient, private readonly Location: LocationService, private readonly Auth: AuthService) {
     super();
@@ -73,14 +72,10 @@ export class TopicArgumentService extends ItemsListService {
   }
 
   loadArguments() {
-    return this.loadArguments$.pipe(
+    return this.reload$.pipe(
       exhaustMap(() => this.loadItems()),
       shareReplay()
     );
-  }
-
-  reloadArguments(): void {
-    this.loadArguments$.next();
   }
 
   save(data: any) {

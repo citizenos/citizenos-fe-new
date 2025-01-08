@@ -1,3 +1,5 @@
+@use 'variables' as *;
+
 /* cyrillic-ext */
 @font-face {
   font-family: 'Noto Sans';
@@ -252,5 +254,56 @@
 @mixin spread-map($map: ()) {
   @each $key, $value in $map {
       #{$key}: $value;
+  }
+}
+
+// Mixin for Flex Container
+@mixin flex-container($direction: row, $justify: flex-start, $align: flex-start) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+// Mixin for Buttons
+@mixin button($bg-color, $text-color, $border: none, $border-radius: 8px) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: $border;
+  border-radius: $border-radius;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken($bg-color, 10%);
+  }
+}
+
+// Mixin for Dropdowns
+@mixin dropdown-style {
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  padding: 8px 16px;
+  background-color: $color-background;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+}
+
+@mixin heading($size) {
+  font-size: $size;
+  font-style: normal;
+  font-weight: 600;
+  line-height: $size + 4px;
+
+  a {
+    font-size: $size;
+    font-style: normal;
+    font-weight: 600;
+    line-height: $size + 4px;
   }
 }

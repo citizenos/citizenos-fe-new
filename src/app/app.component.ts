@@ -69,11 +69,10 @@ export class AppComponent {
 
           const g = outlet?.segments.map(seg => seg.path) || [''];
           let langParam = g[0];
-          console.log(langParam);
           if (translate.currentLang !== langParam && translate.getLangs().indexOf(langParam) === -1) {
-            console.log(this.auth.userLang$.value)
-            g.unshift(this.auth.userLang$.value || translate.currentLang || translate.getBrowserLang() || translate.getDefaultLang());
-            this.router.navigate(g, { queryParams: parsedUrl.queryParams, fragment: parsedUrl.fragment || undefined });
+            console.log((this.auth.userLang$.value || translate.currentLang || translate.getBrowserLang()) ?? translate.getDefaultLang())
+            g.unshift((this.auth.userLang$.value || translate.currentLang || translate.getBrowserLang()) ?? translate.getDefaultLang());
+            this.router.navigate(g, { queryParams: parsedUrl.queryParams, fragment: parsedUrl.fragment ?? undefined });
           }
           else if (translate.currentLang !== langParam) {
             if (!this.translateDebug.isDebugMode) {

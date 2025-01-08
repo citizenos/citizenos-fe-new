@@ -503,38 +503,43 @@
           translate="VIEWS.MY_TOPICS.BTN_APPLY"></button>
       </div>
       <div class="options button_options" *ngIf="mobileFilters.category">
-        <label class="checkbox" (click)="mobileFilters.category = ''">
-          <span translate="TXT_TOPIC_CATEGORY_ALL"></span>
-          <input type="radio" name="category">
-          <span class="checkmark"></span>
-        </label>
+        <div class="options_wrapper">
+          <label class="checkbox" (click)="mobileFilters.category = ''">
+            <span translate="TXT_TOPIC_CATEGORY_ALL"></span>
+            <input type="radio" name="category">
+            <span class="checkmark"></span>
+          </label>
 
-        <label class="checkbox" *ngFor="let category of categories$" (click)=" mobileFilters.category = category">
-          <span [translate]="'TXT_TOPIC_CATEGORY_'+category | uppercase"></span>
-          <input type="radio" name="category">
-          <span class="checkmark"></span>
-        </label>
+          <label class="checkbox" *ngFor="let category of categories$" (click)=" mobileFilters.category = category">
+            <span [translate]="'TXT_TOPIC_CATEGORY_'+category | uppercase"></span>
+            <input type="radio" name="category">
+            <span class="checkmark"></span>
+          </label>
+        </div>
 
         <button class="btn_medium_secondary"
           (click)="setCategory(mobileFilters.category);mobileFilters.category= false;"
           translate="COMPONENTS.PUBLIC_TOPICS.BTN_APPLY"></button>
       </div>
+
       <div class="options button_options" *ngIf="mobileFilters.country">
         <typeahead class="dropdown dropdown_input" activeClass="dropdown_active" [term]="countrySearch"
           (search)="searchCountry($event)" [placeholder]="'VIEWS.MY_TOPICS.FILTER_COUNTRY' | translate">
         </typeahead>
-        <label class="checkbox" (click)="mobileFilters.country = 'all'">
-          <span translate="VIEWS.MY_TOPICS.FILTER_ALL"></span>
-          <input type="radio" name="country">
-          <span class="checkmark"></span>
-        </label>
-        <ng-container *ngIf="countries$ | async as countries">
-          <label class="checkbox" *ngFor="let country of countries" (click)="mobileFilters.country = country.name;">
-            <span>{{country.name}}</span>
+        <div class="options_wrapper">
+          <label class="checkbox" (click)="mobileFilters.country = 'all'">
+            <span translate="VIEWS.MY_TOPICS.FILTER_ALL"></span>
             <input type="radio" name="country">
             <span class="checkmark"></span>
           </label>
-        </ng-container>
+          <ng-container *ngIf="countries$ | async as countries">
+            <label class="checkbox" *ngFor="let country of countries" (click)="mobileFilters.country = country.name;">
+              <span>{{country.name}}</span>
+              <input type="radio" name="country">
+              <span class="checkmark"></span>
+            </label>
+          </ng-container>
+        </div>
         <button class="btn_medium_secondary" (click)="setCountry(mobileFilters.country);mobileFilters.country= false;"
           translate="VIEWS.MY_TOPICS.BTN_APPLY"></button>
       </div>
@@ -543,30 +548,22 @@
         <typeahead class="dropdown dropdown_input" activeClass="dropdown_active" [term]="languageSearch"
           (search)="searchLanguage($event)" [placeholder]="'VIEWS.MY_TOPICS.FILTER_LANGUAGE' | translate">
         </typeahead>
-        <label class="checkbox" (click)="mobileFilters.language = 'all'">
-          <span translate="VIEWS.MY_GROUPS.FILTER_ALL"></span>
-          <input type="radio" name="language">
-          <span class="checkmark"></span>
-        </label>
-        <ng-container *ngIf="languages$ | async as languages">
-          <label class="checkbox" *ngFor="let language of languages" (click)="mobileFilters.language = language.name;">
-            <span>{{language.name}}</span>
+
+        <div class="options_wrapper">
+          <label class="checkbox" (click)="mobileFilters.language = 'all'">
+            <span translate="VIEWS.MY_GROUPS.FILTER_ALL"></span>
             <input type="radio" name="language">
             <span class="checkmark"></span>
           </label>
-        </ng-container>
-        <!--label class="checkbox">
-          <span translate="VIEWS.MY_TOPICS.FILTER_ALL"></span>
-          <input type="radio" name="language">
-          <span class="checkmark"></span>
-        </!--label>
-        <ng-container-- *ngIf="languages$ | async as languages">
-          <label class="checkbox" *ngFor="let language of languages" (click)="mobileFilters.language = language.name;">
-            <span>{{language.name}}</span>
-            <input type="radio" name="language">
-            <span class="checkmark"></span>
-          </label>
-        </ng-container-->
+          <ng-container *ngIf="languages$ | async as languages">
+            <label class="checkbox" *ngFor="let language of languages" (click)="mobileFilters.language = language.name;">
+              <span>{{language.name}}</span>
+              <input type="radio" name="language">
+              <span class="checkmark"></span>
+            </label>
+          </ng-container>
+        </div>
+
         <button class="btn_medium_secondary"
           (click)="setLanguage(mobileFilters.language); mobileFilters.language= false;"
           translate="VIEWS.MY_TOPICS.BTN_APPLY"></button>

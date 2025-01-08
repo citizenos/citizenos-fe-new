@@ -138,9 +138,6 @@ export class SearchComponent implements OnInit {
         return this.router.navigate(['/topics', item.id]);
       } else if (model === 'group' && item.id) {
         this.app.showSearch = false;
-        if (this.AuthService.loggedIn$.value === true && context === 'my') {
-          return this.router.navigate(['my/groups', item.id], { queryParams: { filter: 'grouped' } });
-        }
         return this.router.navigate(['/groups', item.id]);
       }
     }

@@ -58,7 +58,7 @@ export class IdeaReplyReportModerateComponent {
     this.TopicIdeaRepliesService.moderate(data).pipe(take(1))
       .subscribe({
         next: () => {
-          this.TopicIdeaRepliesService.reloadArguments();
+          this.TopicIdeaRepliesService.reload();
           this.dialog.closeAll();
         },
         error: (err) => {

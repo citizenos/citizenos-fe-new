@@ -146,7 +146,7 @@ export class GroupRequestTopicsComponent implements OnInit {
         .pipe(take(1))
         .subscribe({
           next: (res: any) => {
-            this.GroupService.reloadGroup();
+            this.GroupService.reload();
             this.GroupMemberTopicService.setParam('groupId', this.group.id);
             this.dialog.close();
             this.NotificationService.addSuccess('COMPONENTS.GROUP_REQUEST_ADD_TOPICS_DIALOG.MSG_REQUEST_SENT_SUCCESS');

@@ -55,7 +55,7 @@ export class IdeaReportModerateComponent  implements OnInit {
     this.TopicIdeaService.moderate(data).pipe(take(1))
       .subscribe({
         next: () => {
-          this.TopicIdeaService.reloadIdeas();
+          this.TopicIdeaService.reload();
           this.dialog.closeAll();
         },
         error: (err) => {

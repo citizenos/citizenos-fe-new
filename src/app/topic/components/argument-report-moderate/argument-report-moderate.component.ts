@@ -55,7 +55,7 @@ export class ArgumentReportModerateComponent implements OnInit {
     this.TopicArgumentService.moderate(data).pipe(take(1))
       .subscribe({
         next: () => {
-          this.TopicArgumentService.reloadArguments();
+          this.TopicArgumentService.reload();
           this.dialog.closeAll();
         },
         error: (err) => {

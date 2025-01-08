@@ -2,9 +2,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, Input, OnInit, ViewChild, ViewEncapsulation, ElementRef, EventEmitter, Output, ContentChildren, QueryList } from '@angular/core';
 import { DialogService } from 'src/app/shared/dialog';
 import { take } from 'rxjs';
-import { Router } from '@angular/router';
 import { Argument } from 'src/app/interfaces/argument';
 import { AuthService } from '@services/auth.service';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 import { ConfigService } from '@services/config.service';
 import { LocationService } from '@services/location.service';
 import { NotificationService } from '@services/notification.service';
@@ -41,12 +41,12 @@ export class IdeaReplyComponent implements OnInit {
   constructor(
     public dialog: DialogService,
     public config: ConfigService,
-    private router: Router,
     public Auth: AuthService,
-    private Location: LocationService,
-    private Notification: NotificationService,
-    private Translate: TranslateService,
-    public TopicIdeaRepliesService: TopicIdeaRepliesService
+    private readonly Location: LocationService,
+    private readonly Notification: NotificationService,
+    private readonly Translate: TranslateService,
+    public readonly TopicIdeaRepliesService: TopicIdeaRepliesService,
+    private readonly TopicMemberUserService: TopicMemberUserService
   ) {
   }
 
@@ -91,9 +91,6 @@ export class IdeaReplyComponent implements OnInit {
     this.showDeletedArgument = value;
   }
   argumentEditMode() {
-    /* this.editSubject = this.argument.subject;
-     this.editText = this.argument.text;
-     this.editType = this.argument.type;*/
     if (this.showEdit) { // Visible, so we gonna hide, need to clear form errors
       this.errors = [];
     }
@@ -178,6 +175,7 @@ export class IdeaReplyComponent implements OnInit {
       .vote(argument)
       .pipe(take(1))
       .subscribe((voteResult) => {
+        this.TopicMemberUserService.reload();
         this.argument.votes = voteResult;
       });
   };
@@ -209,9 +207,8 @@ export class IdeaReplyComponent implements OnInit {
     }
 
     const argumentIdWithVersion = this.TopicIdeaRepliesService.getArgumentIdWithVersion(reply.parent.id, reply.parent.version);
-    /*this.router.navigate([], {queryParams: {argumentId: argumentIdWithVersion}});*/
     let commentElement: HTMLElement | null = document.getElementById(argumentIdWithVersion);
-    // The referenced comment was found on the page displayed
+    // The referenced argument was found on the page displayed
     if (commentElement) {
       this.scrollTo(commentElement);
     }

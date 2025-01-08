@@ -51,7 +51,6 @@ export class TopicIdeaService extends ItemsListService {
     poi: 0,
     reply: 0
   });
-  public loadIdeas$ = new BehaviorSubject<void>(undefined);
 
   constructor(private http: HttpClient, private Location: LocationService, private Auth: AuthService) {
     super();
@@ -60,15 +59,11 @@ export class TopicIdeaService extends ItemsListService {
   }
 
   loadIdeas() {
-    return this.loadIdeas$.pipe(
+    return this.reload$.pipe(
       exhaustMap(() => this.loadItems()),
       tap((ideas) => console.log(ideas)),
       shareReplay()
     );
-  }
-
-  reloadIdeas(): void {
-    this.loadIdeas$.next();
   }
 
   get (data: any) {

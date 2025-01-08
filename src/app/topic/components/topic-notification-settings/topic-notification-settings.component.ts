@@ -1,11 +1,11 @@
-import { Discussion } from 'src/app/interfaces/discussion';
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { DialogService, DIALOG_DATA } from 'src/app/shared/dialog';
 import { NotificationService } from '@services/notification.service';
 import { TopicNotificationService } from '@services/topic-notification.service';
 import { TopicService } from '@services/topic.service';
-import { tap, map, Observable, take } from 'rxjs';
+import { map, Observable, take, catchError, EMPTY } from 'rxjs';
 import { Topic } from 'src/app/interfaces/topic';
+import { NotificationPreferences } from '@interfaces/notification-preferences.interface';
 
 @Component({
   selector: 'topic-notification-settings',
@@ -14,12 +14,11 @@ import { Topic } from 'src/app/interfaces/topic';
 })
 export class TopicNotificationSettingsComponent implements OnInit {
   @Input() topicId!: string;
-  private supportedTabs = ['general'];
   public tabSelected = 'general';
 
   public topic$?: Observable<Topic>;
   public settings: any;
-  preferences: any = {
+  private static readonly DEFAULT_PREFERENCES: NotificationPreferences = {
     Topic: false,
     Discussion: false,
     DiscussionComment: false,
@@ -32,15 +31,24 @@ export class TopicNotificationSettingsComponent implements OnInit {
     Idea: false,
     IdeaVote: false,
     TopicIdeation: false,
-    IdeaComment: false
+    IdeaComment: false,
+    IdeaReport: false,
+    CommentReport: false
   };
+
+  public preferences: NotificationPreferences;
+
   allowNotifications = false
   constructor(
-    private TopicNotificationService: TopicNotificationService,
-    private Notification: NotificationService,
-    private Topic: TopicService,
-    @Inject(DIALOG_DATA) public data: any,
-    private dialog: DialogService) {
+    private readonly TopicNotificationService: TopicNotificationService,
+    private readonly NotificationService: NotificationService,
+    private readonly Topic: TopicService,
+    @Inject(DIALOG_DATA) public data: { topicId: string },
+    private readonly DialogService: DialogService
+  ) {
+    this.topicId = data.topicId;
+    this.topic$ = this.Topic.get(this.data.topicId);
+    this.preferences = TopicNotificationSettingsComponent.DEFAULT_PREFERENCES;
     if (data.topicId)
       this.topicId = data.topicId;
 
@@ -49,10 +57,11 @@ export class TopicNotificationSettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.settings = this.TopicNotificationService.get({ topicId: this.topicId }).pipe(
-      tap((settings: any) => {
+      map((settings: any) => {
+        console.log(settings)
         this.allowNotifications = settings.allowNotifications;
-        this.preferences = Object.assign(this.preferences, settings.preferences);
-        this.settings = Object.assign(this.settings, settings);
+        this.preferences = { ...this.preferences, ...settings.preferences };
+        return { ...this.settings, ...settings };
       })
     )
   }
@@ -63,12 +72,12 @@ export class TopicNotificationSettingsComponent implements OnInit {
     if (Object.values(this.preferences).indexOf(false) === -1) {
       toggle = false;
     }
-    Object.keys(this.preferences).forEach((key) => {
+    Object.keys(this.preferences).forEach((key: string) => {
       if (toggle) {
-        return this.preferences[key] = true;
+        this.preferences[key as keyof NotificationPreferences] = true;
+      } else {
+        this.preferences[key as keyof NotificationPreferences] = false;
       }
-
-      return this.preferences[key] = false;
     });
     if (toggle) {
       this.allowNotifications = true;
@@ -79,24 +88,34 @@ export class TopicNotificationSettingsComponent implements OnInit {
     return (Object.values(this.preferences).indexOf(false) === -1)
   };
 
-  selectOption(option: string) {
-    this.preferences[option] = !this.preferences[option];
-    if (this.preferences[option] === true) {
-      this.allowNotifications = true;
-    }
+  selectOption(options: string | string[]) {
+    if (!Array.isArray(options)) options = [options];
+    options.forEach((option) => {
+      this.preferences[option as keyof NotificationPreferences] = !this.preferences[option as keyof NotificationPreferences];
+      if (this.preferences[option as keyof NotificationPreferences] === true) {
+        this.allowNotifications = true;
+      }
+    });
   };
-
   doSaveSettings() {
-    if (!this.allowNotifications) {
-      this.TopicNotificationService.delete({ topicId: this.topicId }).pipe(
-        take(1)
-      ).subscribe();
-    } else {
-      this.TopicNotificationService.update({ allowNotifications: this.allowNotifications, preferences: this.preferences, topicId: this.topicId }).pipe(
-        take(1)
-      ).subscribe();
-    }
-    this.dialog.closeAll();
-  };
+    const request$ = !this.allowNotifications
+      ? this.TopicNotificationService.delete({ topicId: this.topicId })
+      : this.TopicNotificationService.update({
+          allowNotifications: this.allowNotifications,
+          preferences: this.preferences,
+          topicId: this.topicId
+        });
+
+    request$.pipe(
+      take(1),
+      catchError(error => {
+        console.log(error);
+        this.NotificationService.addError('MODALS.TOPIC_NOTIFICATION_SETTINGS_ERROR_SAVE');
+        return EMPTY;
+      })
+    ).subscribe(() => {
+      this.DialogService.closeAll();
+    });
+  }
 
 }

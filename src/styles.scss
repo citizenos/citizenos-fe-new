@@ -162,31 +162,15 @@
 }
 
 .main_heading {
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 32px;
+  @include mixins.heading(28px);
 }
 
 .medium_heading {
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 32px;
+  @include mixins.heading(24px);
 }
 
 .small_heading {
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 24px;
-
-  a {
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px;
-  }
+  @include mixins.heading(18px);
 }
 
 a,
@@ -2046,10 +2030,16 @@ tour-item-template {
     background: var(--color-surfaces);
     z-index: 9;
     gap: 8px;
-    min-width: max-content;
     position: relative;
     width: 100%;
     overflow-y: auto;
+
+    .options_wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
 
     .option {
       display: flex;

@@ -46,7 +46,7 @@ export class IdeaComponent {
 
         ideaDialog.afterClosed().subscribe((value) => {
           if (value) {
-            TopicIdeaService.reloadIdeas();
+            TopicIdeaService.reload();
             router.navigate(['/', 'topics', this.topicId], { fragment: 'ideation' })
           }
         });
@@ -94,7 +94,7 @@ export class IdeaDialogComponent extends IdeaboxComponent {
     const url = this.router.parseUrl(this.router.url);
     this.TopicIdeaService.setParam('topicId', this.topic.id);
     this.TopicIdeaService.setParam('ideationId', this.topic.ideationId);
-    this.replies$ = combineLatest([this.route.params, this.TopicIdeaRepliesService.loadReplies$]).pipe(
+    this.replies$ = combineLatest([this.route.params, this.TopicIdeaRepliesService.reload$]).pipe(
       switchMap(([params]) => {
         const paramsObj = Object.assign({}, params);
         paramsObj.topicId = this.topic.id;

@@ -28,7 +28,6 @@ export class TopicIdeationService extends ItemsListService {
   };
 
   params$ = new BehaviorSubject(this.params);
-  private loadIdeation$ = new BehaviorSubject<void>(undefined);
 
   constructor(private Location: LocationService, private http: HttpClient, private Auth: AuthService, private TopicService: TopicService) {
     super();
@@ -36,14 +35,10 @@ export class TopicIdeationService extends ItemsListService {
   }
 
   loadIdeation(params?: { [key: string]: string | boolean }) {
-    return this.loadIdeation$.pipe(
+    return this.reload$.pipe(
       exhaustMap(() => this.get(params)),
       shareReplay()
     );
-  }
-
-  reloadIdeation(): void {
-    this.loadIdeation$.next();
   }
 
   query(params: any) {

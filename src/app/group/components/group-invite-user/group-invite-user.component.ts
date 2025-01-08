@@ -69,8 +69,8 @@ export class GroupInviteUserComponent {
         this.GroupInviteUserService.delete({ groupId: this.group.id, inviteId: this.user.invite.id })
           .pipe(take(1))
           .subscribe(() => {
-            this.GroupService.reloadGroup();
-            this.GroupInviteUserService.reloadItems();
+            this.GroupService.reload();
+            this.GroupInviteUserService.reload();
           });
       }
     });

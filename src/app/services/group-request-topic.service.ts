@@ -13,22 +13,18 @@ export class GroupRequestTopicService extends ItemsListService {
   params$ = new BehaviorSubject(this.params);
 
   public LEVELS = ['read','admin'];
-  public loadMembers$ = new BehaviorSubject<void>(undefined);
 
   constructor(private http: HttpClient, private Location: LocationService) {
     super();
-    this.items$ = this.loadMembers$.pipe(
+    this.items$ = this.reload$.pipe(
       exhaustMap(() => this.loadItems()),
       shareReplay()
     );
   }
 
-  reloadItems(): void {
-    this.loadMembers$.next();
-  }
 
   getItems(params:any) {
-    return this.loadMembers$.pipe(
+    return this.reload$.pipe(
       exhaustMap(() => this.query(params)),
       shareReplay()
     );

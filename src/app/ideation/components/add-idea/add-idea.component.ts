@@ -1,5 +1,6 @@
 import { IdeaAttachmentService } from '@services/idea-attachment.service';
 import { TopicIdeationService } from '@services/topic-ideation.service';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 
 import { trigger, state, style } from '@angular/animations';
 import { Component, OnInit, Input, Inject, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
@@ -69,6 +70,7 @@ export class AddIdeaComponent {
     private IdeaAttachmentService: IdeaAttachmentService,
     private Notification: NotificationService,
     public TopicIdeaService: TopicIdeaService,
+    private TopicMemberUserService: TopicMemberUserService,
     @Inject(ActivatedRoute) private route: ActivatedRoute,
     @Inject(TranslateService) public translate: TranslateService,
     @Inject(Router) private router: Router) {
@@ -145,8 +147,9 @@ export class AddIdeaComponent {
       .subscribe({
         next: (idea) => {
           this.doSaveAttachments(idea.id)
-          this.TopicIdeaService.reloadIdeas();
-          this.TopicIdeationService.reloadIdeation();
+          this.TopicIdeaService.reload();
+          this.TopicIdeationService.reload();
+          this.TopicMemberUserService.reload();
           this.description = '';
           this.ideaForm.reset();
           this.clear();

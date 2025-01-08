@@ -147,3 +147,12 @@
     background-color: rgba(44, 59, 71, 0.8);
   }
 }
+
+.dropdown {
+  @include mixins.dropdown-style;
+  min-width: 160px;
+
+  @include mixins.mobile {
+    width: calc(100% - 40px);
+  }
+}

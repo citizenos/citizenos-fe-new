@@ -57,17 +57,11 @@ export class GroupService extends ItemsListService {
     return this.query(params);
   }
 
-  private loadGroup$ = new BehaviorSubject<void>(undefined);
-
   loadGroup(id: string, params?: { [key: string]: string }) {
-    return this.loadGroup$.pipe(
+    return this.reload$.pipe(
       exhaustMap(() => this.get(id, params)),
       shareReplay()
     );
-  }
-
-  reloadGroup(): void {
-    this.loadGroup$.next();
   }
 
   get(id: string, params?: { [key: string]: string }): Observable<Group> {

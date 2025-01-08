@@ -117,7 +117,7 @@ export class EditIdeaComponent {
           this.description = '';
           this.ideaForm.reset();
           this.app.addIdea.next(false);
-          this.TopicIdeaService.reloadIdeas();
+          this.TopicIdeaService.reload();
           this.idea.statement = idea.statement;
           this.idea.description = idea.description;
           this.showEdit.emit(false);

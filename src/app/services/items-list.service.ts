@@ -20,8 +20,13 @@ export abstract class ItemsListService {
   countTotal$ = new BehaviorSubject(0);
   totalPages$ = new BehaviorSubject(1);
   page$ = new BehaviorSubject(1);
+  reload$ = new BehaviorSubject<void>(undefined);
   abstract params$: BehaviorSubject<any>;
   constructor() {
+  }
+
+  reload () {
+    this.reload$.next();
   }
 
   doOrder(orderBy: string, order?: string) {

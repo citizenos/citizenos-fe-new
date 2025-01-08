@@ -70,7 +70,7 @@ export class GroupMemberUserComponent implements OnInit {
           this.GroupMemberUser.delete({ groupId: this.group.id, userId: this.member.userId || this.member.id })
             .pipe(take(1))
             .subscribe(() => {
-              this.GroupService.reloadGroup();
+              this.GroupService.reload();
             });
         }
       });

@@ -8,6 +8,7 @@ import { MarkdownDirective } from 'src/app/directives/markdown.directive';
 import { AppService } from '@services/app.service';
 import { AuthService } from '@services/auth.service';
 import { TopicArgumentService } from '@services/topic-argument.service';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 
 @Component({
   selector: 'post-argument',
@@ -52,6 +53,7 @@ export class PostArgumentComponent {
     public app: AppService,
     private readonly AuthService: AuthService,
     public TopicArgumentService: TopicArgumentService,
+    private readonly TopicMemberUserService: TopicMemberUserService,
     @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
     @Inject(TranslateService) public translate: TranslateService,
     @Inject(Router) private readonly router: Router) {
@@ -121,7 +123,8 @@ export class PostArgumentComponent {
       .pipe(take(1))
       .subscribe({
         next: (argument) => {
-          this.TopicArgumentService.reloadArguments();
+          this.TopicArgumentService.reload();
+          this.TopicMemberUserService.reload();
           this.text = '';
           this.argumentForm.reset();
           this.clear();

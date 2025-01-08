@@ -136,7 +136,7 @@ export class GroupAddTopicsComponent implements OnInit {
         .pipe(take(1))
         .subscribe({
           next: (res: any) => {
-            this.GroupService.reloadGroup();
+            this.GroupService.reload();
             this.GroupMemberTopicService.setParam('groupId', this.group.id);
           },
           error: (errorResponse) => {

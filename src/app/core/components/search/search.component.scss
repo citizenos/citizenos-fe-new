@@ -103,6 +103,7 @@
     flex-direction: column;
     gap: 24px;
     padding-top: 29px;
+    overflow-y: auto;
     .results_header {
       font-size: 16px;
       font-style: normal;

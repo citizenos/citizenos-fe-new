@@ -307,7 +307,7 @@ export class GroupCreateComponent implements OnInit, BlockNavigationIfChange {
         .pipe(take(1))
         .subscribe({
           next: (res: any) => {
-            this.GroupService.reloadGroup();
+            this.GroupService.reload();
             this.GroupMemberTopicService.setParam('groupId', this.group.id);
           },
           error: (errorResponse: any) => {

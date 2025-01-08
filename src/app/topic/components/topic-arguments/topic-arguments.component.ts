@@ -47,7 +47,7 @@ export class TopicArgumentsComponent implements OnInit {
     public TopicArgumentService: TopicArgumentService) {
     this.TopicArgumentService.setParam('limit', 5);
 
-    this.arguments$ = this.TopicArgumentService.loadArguments$.pipe(
+    this.arguments$ = this.TopicArgumentService.reload$.pipe(
       switchMap(() => {
         return this.TopicArgumentService.loadArguments()
       }),

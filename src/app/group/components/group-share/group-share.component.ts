@@ -83,7 +83,7 @@ export class GroupShareComponent implements OnInit {
 
     this.GroupJoin.update(groupJoin).pipe(take(1)).subscribe(() => {
       this.join.level = level;
-      this.GroupService.reloadGroup();
+      this.GroupService.reload();
     })
   };
 

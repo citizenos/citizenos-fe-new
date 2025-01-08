@@ -4,7 +4,8 @@ import { DialogService } from 'src/app/shared/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { map, tap, Observable, take, switchMap } from 'rxjs';
-import { Topic } from 'src/app/interfaces/topic';
+import { Topic } from '@interfaces/topic';
+import { TopicMemberGroup } from '@interfaces/group';
 import { AppService } from '@services/app.service';
 import { ConfigService } from '@services/config.service';
 import { NotificationService } from '@services/notification.service';
@@ -198,12 +199,12 @@ export class VoteCreateComponent extends TopicFormComponent implements BlockNavi
               this.topicAttachments$ = TopicAttachmentService.loadItems();
               this.TopicMemberGroupService.setParam('topicId', this.topic.id);
               this.topicGroups$ = this.TopicMemberGroupService.loadItems().pipe(
-                tap((groups) => {
+                tap((groups: TopicMemberGroup[]) => {
                   if (groups.length && this.isnew) {
                     this.topic.visibility = groups[0].visibility;
                     this.isCreatedFromGroup = true;
                   }
-                  groups.forEach((group: any) => {
+                  groups.forEach((group) => {
                     const exists = this.topicGroups.find((mgroup) => mgroup.id === group.id);
                     if (!exists) this.topicGroups.push(group);
                   })
