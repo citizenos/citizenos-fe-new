@@ -236,26 +236,30 @@
       </div>
 
       <div class="options filter_options">
-        <div class="filter_option">
-          <span translate="COMPONENTS.PUBLIC_TOPICS.FILTER_VISIBILITY"></span><a class="bold"
-            (click)="mobileFilters.status = true">{{'TXT_TOPIC_STATUS_' + (topicFilters.status || 'all') | uppercase |
-            translate | titlecase}}</a>
-        </div>
-        <div class="filter_option">
-          <span translate="COMPONENTS.PUBLIC_TOPICS.FILTER_CATEGORIES"></span><a class="bold"
-            (click)="mobileFilters.category = true">{{'TXT_TOPIC_CATEGORY_'+ (topicFilters.category || 'all') | uppercase |
-            translate | titlecase}}</a>
-        </div>
-        <div class="filter_option">
-          <span translate="COMPONENTS.PUBLIC_TOPICS.FILTER_COUNTRY"></span><a class="bold"
-            (click)="mobileFilters.country = true">{{(topicFilters.country)?
-              topicFilters.country : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</a>
-        </div>
-        <div class="filter_option">
-          <span translate="COMPONENTS.PUBLIC_TOPICS.FILTER_LANGUAGE"></span><a class="bold"
-            (click)="mobileFilters.language = true">{{(topicFilters.language)?
-              topicFilters.language : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</a>
-        </div>
+        <a class="filter_option" (click)="mobileFilters.status = true">
+          <span class="filter_option_text" translate="COMPONENTS.PUBLIC_TOPICS.FILTER_VISIBILITY"></span>
+          <span class="bold">{{'TXT_TOPIC_STATUS_' + (topicFilters.status || 'all') | uppercase |
+            translate | titlecase}}</span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.category = true">
+          <span class="filter_option_text" translate="COMPONENTS.PUBLIC_TOPICS.FILTER_CATEGORIES"></span>
+          <span class="bold">{{'TXT_TOPIC_CATEGORY_'+ (topicFilters.category || 'all') | uppercase |
+            translate | titlecase}}</span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.country = true">
+          <span class="filter_option_text" translate="COMPONENTS.PUBLIC_TOPICS.FILTER_COUNTRY"></span>
+          <span class="bold">{{(topicFilters.country)?
+              topicFilters.country : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.language = true">
+          <span class="filter_option_text" translate="COMPONENTS.PUBLIC_TOPICS.FILTER_LANGUAGE"></span>
+          <span class="bold">{{(topicFilters.language)?
+              topicFilters.language : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</span>
+        </a>
+
         <button (click)="doClearFilters()" class="btn_medium_plain">
           <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -321,9 +325,12 @@
           translate="COMPONENTS.PUBLIC_TOPICS.BTN_APPLY"></button>
       </div>
       <div class="options button_options" *ngIf="mobileFilters.country">
-        <typeahead class="dropdown dropdown_input" activeClass="dropdown_active" [term]="countrySearch"
-          (search)="searchCountry($event)" [placeholder]="'COMPONENTS.PUBLIC_TOPICS.FILTER_COUNTRY' | translate">
-        </typeahead>
+        <search-filter
+          [term]="countrySearch"
+          [placeholder]="'COMPONENTS.PUBLIC_TOPICS.FILTER_COUNTRY' | translate"
+          [search]="searchCountry.bind(this)"
+          [close]="closeMobileFilter.bind(this)"
+        />
 
         <div class="options_wrapper">
           <label class="checkbox" (click)="mobileFilters.country = 'all'">
@@ -339,13 +346,18 @@
             </label>
           </ng-container>
         </div>
-        <button class="btn_medium_secondary" (click)="setCountry(mobileFilters.country);mobileFilters.country= false;"
+
+        <button class="btn_medium_secondary" (click)="setCountry(mobileFilters.country); closeMobileFilter();"
           translate="COMPONENTS.PUBLIC_TOPICS.BTN_APPLY"></button>
       </div>
       <div class="options button_options" *ngIf="mobileFilters.language">
-        <typeahead class="dropdown dropdown_input" activeClass="dropdown_active" [term]="languageSearch"
-          (search)="searchLanguage($event)" [placeholder]="'COMPONENTS.PUBLIC_TOPICS.FILTER_LANGUAGE' | translate">
-        </typeahead>
+        <search-filter
+          [term]="languageSearch"
+          [placeholder]="'COMPONENTS.PUBLIC_TOPICS.FILTER_LANGUAGE' | translate"
+          [search]="searchLanguage.bind(this)"
+          [close]="closeMobileFilter.bind(this)"
+        />
+
         <div class="options_wrapper">
           <label class="checkbox" (click)="mobileFilters.language = 'all'">
             <span translate="TXT_TOPIC_STATUS_ALL"></span>
@@ -360,8 +372,9 @@
             </label>
           </ng-container>
         </div>
+
         <button class="btn_medium_secondary"
-          (click)="setLanguage(mobileFilters.language);mobileFilters.language= false;"
+          (click)="setLanguage(mobileFilters.language); closeMobileFilter();"
           translate="COMPONENTS.PUBLIC_TOPICS.BTN_APPLY"></button>
       </div>
     </div>

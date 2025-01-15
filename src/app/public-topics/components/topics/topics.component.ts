@@ -222,8 +222,16 @@ export class TopicsComponent implements OnInit {
     const filtersShow = Object.entries(this.mobileFilters).find(([key, value]) => {
       return !!value;
     })
-    if (filtersShow)
-      this.mobileFilters[filtersShow[0]] = false;
+    if (filtersShow) {
+      const filterName = filtersShow[0]
+      this.mobileFilters[filterName] = false;
+      if (filterName === 'language') {
+        this.languageSearch$.next(this.languageSearch);
+      }
+      if (filterName === 'country') {
+        this.countrySearch$.next(this.countrySearch);
+      }
+    }
   }
 
   showMobileOverlay() {

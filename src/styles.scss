@@ -356,6 +356,10 @@ input {
       justify-content: space-between;
       background-color: var(--color-background);
       border-radius: 16px;
+
+      .filter_option_text {
+        color: var(--color-text);
+      }
     }
 
     .input_area {

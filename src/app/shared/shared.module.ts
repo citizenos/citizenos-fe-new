@@ -55,6 +55,7 @@ import { TourItemDirective, TourItemTemplateComponent } from '../directives/tour
 import { InterruptDialogComponent } from './components/interrupt-dialog/interrupt-dialog.component';
 import { TooltipComponent} from './components/tooltip/tooltip.component';
 import { ImageEditorComponent } from './components/image-editor/image-editor.component';
+import { SearchFilterComponent } from './components/search-filter/search-filter.component';
 import { TopicVoteDeadlineComponent } from '../topic/components/topic-vote-deadline/topic-vote-deadline.component';
 
 import { NotificationComponent } from '../core/components/notification/notification.component';
@@ -111,6 +112,7 @@ import { SiteNotificationComponent } from './components/site-notification/site-n
     InterruptDialogComponent,
     TooltipComponent,
     ImageEditorComponent,
+    SearchFilterComponent,
     TopicVoteDeadlineComponent,
     NotificationComponent,
     MarkdownLinkDialogComponent,
@@ -178,6 +180,7 @@ import { SiteNotificationComponent } from './components/site-notification/site-n
     TourItemTemplateComponent,
     TooltipComponent,
     ImageEditorComponent,
+    SearchFilterComponent,
     DialogModule,
     NotificationComponent,
     MarkdownLinkDialogComponent,

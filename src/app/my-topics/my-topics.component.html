@@ -313,9 +313,9 @@
         </button>
       </div>
       <div class="options filter_options">
-        <div class="filter_option">
-          <span translate="VIEWS.MY_TOPICS.FILTER_TOPIC_TYPE"></span><a class="bold"
-            (click)="mobileFilters.type = true">
+        <a class="filter_option" (click)="mobileFilters.type = true">
+          <span class="filter_option_text" translate="VIEWS.MY_TOPICS.FILTER_TOPIC_TYPE"></span>
+          <span class="bold">
             <span *ngIf="!topicFilters.visibility" translate="VIEWS.MY_TOPICS.FILTER_ALL"></span>
             <span *ngIf="topicFilters.visibility === 'public'"
               translate="VIEWS.MY_TOPICS.FILTERS.MY_PUBLIC_TOPICS"></span>
@@ -325,54 +325,58 @@
               translate}}</span>
             <span *ngIf="topicFilters.visibility === 'showModerated'"> {{'VIEWS.MY_TOPICS.FILTERS.TOPICS_MODERATED' |
               translate}}</span>
-          </a>
-        </div>
-        <div class="filter_option">
-          <span translate="VIEWS.MY_TOPICS.FILTER_MY_ENGAGEMENT"></span><a class="bold"
-            (click)="mobileFilters.engagements = true">
+          </span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.engagements = true">
+          <span class="filter_option_text" translate="VIEWS.MY_TOPICS.FILTER_MY_ENGAGEMENT"></span>
+          <span class="bold">
             <span translate="VIEWS.MY_TOPICS.FILTER_ALL" *ngIf="!topicFilters.engagements"></span>
             <span translate="VIEWS.MY_TOPICS.FILTERS.TOPICS_I_HAVE_VOTED"
               *ngIf="topicFilters.engagements === 'hasVoted'"></span>
             <span translate="VIEWS.MY_TOPICS.FILTERS.TOPICS_I_HAVE_NOT_VOTED"
               *ngIf="topicFilters.engagements === 'hasNotVoted'"></span>
             <span translate="VIEWS.MY_TOPICS.FILTERS.TOPICS_I_CREATED"
-              *ngIf="topicFilters.engagements === 'iCreated'"></span></a>
-        </div>
+              *ngIf="topicFilters.engagements === 'iCreated'"></span>
+          </span>
+        </a>
 
-        <div class="filter_option">
-          <span translate="VIEWS.MY_TOPICS.FILTER_STATUS"></span><a class="bold" (click)="mobileFilters.status = true"
+        <a class="filter_option" (click)="mobileFilters.status = true">
+          <span class="filter_option_text" translate="VIEWS.MY_TOPICS.FILTER_STATUS"></span>
+          <span class="bold"
             [innerHtml]="'TXT_TOPIC_STATUS_' + (topicFilters.status || 'all') | uppercase | translate | titlecase">
-          </a>
-        </div>
-        <div class="filter_option">
-          <span translate="VIEWS.MY_TOPICS.FILTER_ORDER"></span><a class="bold" (click)="mobileFilters.orderBy = true">
+          </span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.orderBy = true">
+          <span class="filter_option_text" translate="VIEWS.MY_TOPICS.FILTER_ORDER"></span>
+          <span class="bold">
             <span translate="VIEWS.MY_TOPICS.FILTER_ALL" *ngIf="!topicFilters.orderBy"></span>
-            <!--span translate="VIEWS.MY_TOPICS.FILTERS.ORDER_RECENT_ACTIVITY"
-              *ngIf="topicFilters.orderBy === 'activityTime'"></!--span>
-            <span-- translate="VIEWS.MY_TOPICS.FILTERS.ORDER_MOST_ACTIVITIES"
-              *ngIf="topicFilters.orderBy === 'activityCount'"></span-->
             <span translate="VIEWS.MY_TOPICS.FILTERS.ORDER_MOST_PARTICIPANTS"
               *ngIf="topicFilters.orderBy === 'membersCount'"></span>
             <span translate="VIEWS.MY_TOPICS.FILTERS.ORDER_MOST_RECENT"
               *ngIf="topicFilters.orderBy === 'created'"></span>
-          </a>
-        </div>
-        <div class="filter_option">
-          <span translate="VIEWS.MY_TOPICS.FILTER_CATEGORIES"></span><a class="bold"
-            (click)="mobileFilters.category = true">{{(topicFilters.category)?
-            topicFilters.category : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</a>
-        </div>
-        <div class="filter_option">
-          <span translate="VIEWS.MY_TOPICS.FILTER_COUNTRY"></span><a class="bold"
-            (click)="mobileFilters.country = true">{{(topicFilters.country)?
-            topicFilters.country : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</a>
-        </div>
-        <div class="filter_option">
-          <span translate="VIEWS.MY_TOPICS.FILTER_LANGUAGE"></span><a class="bold"
-            (click)="mobileFilters.language = true">
+          </span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.category = true">
+          <span class="filter_option_text" translate="VIEWS.MY_TOPICS.FILTER_CATEGORIES"></span>
+          <span class="bold">{{(topicFilters.category)?
+            topicFilters.category : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.country = true">
+          <span class="filter_option_text" translate="VIEWS.MY_TOPICS.FILTER_COUNTRY"></span>
+          <span class="bold">{{(topicFilters.country)?
+            topicFilters.country : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</span>
+        </a>
+
+        <a class="filter_option" (click)="mobileFilters.language = true">
+          <span class="filter_option_text" translate="VIEWS.MY_TOPICS.FILTER_LANGUAGE"></span>
+          <span class="bold">
             {{(topicFilters.language && topicFilters.language !== 'all')?
-            topicFilters.language : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</a>
-        </div>
+            topicFilters.language : 'VIEWS.MY_TOPICS.FILTER_ALL' | translate}}</span>
+        </a>
 
         <button (click)="doClearFilters()" class="btn_medium_plain">
           <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -518,20 +522,24 @@
         </div>
 
         <button class="btn_medium_secondary"
-          (click)="setCategory(mobileFilters.category);mobileFilters.category= false;"
+          (click)="setCategory(mobileFilters.category); closeMobileFilter();"
           translate="COMPONENTS.PUBLIC_TOPICS.BTN_APPLY"></button>
       </div>
 
       <div class="options button_options" *ngIf="mobileFilters.country">
-        <typeahead class="dropdown dropdown_input" activeClass="dropdown_active" [term]="countrySearch"
-          (search)="searchCountry($event)" [placeholder]="'VIEWS.MY_TOPICS.FILTER_COUNTRY' | translate">
-        </typeahead>
+        <search-filter
+          [term]="countrySearch"
+          [placeholder]="'VIEWS.MY_TOPICS.FILTER_COUNTRY' | translate"
+          [search]="searchCountry.bind(this)"
+          [close]="closeMobileFilter.bind(this)"
+        />
         <div class="options_wrapper">
           <label class="checkbox" (click)="mobileFilters.country = 'all'">
             <span translate="VIEWS.MY_TOPICS.FILTER_ALL"></span>
             <input type="radio" name="country">
             <span class="checkmark"></span>
           </label>
+
           <ng-container *ngIf="countries$ | async as countries">
             <label class="checkbox" *ngFor="let country of countries" (click)="mobileFilters.country = country.name;">
               <span>{{country.name}}</span>
@@ -540,14 +548,18 @@
             </label>
           </ng-container>
         </div>
-        <button class="btn_medium_secondary" (click)="setCountry(mobileFilters.country);mobileFilters.country= false;"
+
+        <button class="btn_medium_secondary" (click)="setCountry(mobileFilters.country); closeMobileFilter();"
           translate="VIEWS.MY_TOPICS.BTN_APPLY"></button>
       </div>
 
       <div class="options button_options" *ngIf="mobileFilters.language">
-        <typeahead class="dropdown dropdown_input" activeClass="dropdown_active" [term]="languageSearch"
-          (search)="searchLanguage($event)" [placeholder]="'VIEWS.MY_TOPICS.FILTER_LANGUAGE' | translate">
-        </typeahead>
+        <search-filter
+          [term]="languageSearch"
+          [placeholder]="'VIEWS.MY_TOPICS.FILTER_LANGUAGE' | translate"
+          [search]="searchLanguage.bind(this)"
+          [close]="closeMobileFilter.bind(this)"
+        />
 
         <div class="options_wrapper">
           <label class="checkbox" (click)="mobileFilters.language = 'all'">
@@ -555,6 +567,7 @@
             <input type="radio" name="language">
             <span class="checkmark"></span>
           </label>
+
           <ng-container *ngIf="languages$ | async as languages">
             <label class="checkbox" *ngFor="let language of languages" (click)="mobileFilters.language = language.name;">
               <span>{{language.name}}</span>
@@ -565,7 +578,7 @@
         </div>
 
         <button class="btn_medium_secondary"
-          (click)="setLanguage(mobileFilters.language); mobileFilters.language= false;"
+          (click)="setLanguage(mobileFilters.language); closeMobileFilter();"
           translate="VIEWS.MY_TOPICS.BTN_APPLY"></button>
       </div>
     </div>
