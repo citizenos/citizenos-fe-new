@@ -20,7 +20,6 @@ import { Language } from 'src/app/interfaces/language';
   styleUrls: ['./groups.component.scss'],
   animations: [
     trigger('openClose', [
-      // ...
       state('open', style({
         'maxHeight': '450px',
         transition: '0.2s ease-in-out max-height'
@@ -37,22 +36,6 @@ export class GroupsComponent implements OnInit {
   moreFilters = false;
   searchInput = '';
   searchString$ = new BehaviorSubject('');
-  mobileFilters:any = {
-    visibility: false,
-    my_engagement: false,
-    category: false,
-    orderBy: false,
-    country: false,
-    language: false
-  }
-  groupFilters = {
-    visibility: '',
-    my_engagement: '',
-    category: '',
-    orderBy: '',
-    country: '',
-    language: ''
-  };
 
   visibilityFilter$ = new BehaviorSubject('');
   engagmentsFilter$ = new BehaviorSubject('');
@@ -79,6 +62,71 @@ export class GroupsComponent implements OnInit {
   languages$ = of(<Language[]>[]);
 
   filtersSet = false;
+
+  filtersData = {
+    visibility: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.PUBLIC_GROUPS.FILTERS.VISIBILITY",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.ALL', value: "all"},
+      ]
+    },
+    orderBy: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.PUBLIC_GROUPS.FILTERS.ORDER",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.ALL', value: "all"},
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.ORDER_RECENT_ACTIVITY', value: "activity"},
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.MOST_ACTIVITIES', value: "activityCount"},
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.MOST_PARTICIPANTS', value: "memberCount"},
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.MOST_RECENT', value: "createdAt"},
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.MOST_TOPICS', value: "topicCount"},
+      ]
+    },
+    country: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_GROUPS.FILTER_COUNTRY",
+      selectedValue: "",
+      preSelectedValue: "",
+      /**
+       * @note Only for desktop. For mobile it looks for observable.
+       */
+      items: [
+        { title: 'VIEWS.MY_GROUPS.FILTER_ALL', value: "all"},
+        ...this.countries.map((it) => {
+          return { title: it.name, value: it.name }
+        }),
+      ]
+    },
+    language: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_GROUPS.FILTER_LANGUAGE",
+      selectedValue: "",
+      preSelectedValue: "",
+      /**
+       * @note Only for desktop. For mobile it looks for observable.
+       */
+      items: [
+        { title: 'VIEWS.MY_GROUPS.FILTER_ALL', value: "all"},
+        ...this.languages.map((it) => {
+          return { title: it.name, value: it.name }
+        }),
+      ]
+    },
+  };
+
+  get filterKeys() {
+    return Object.keys(this.filtersData) as Array<keyof typeof this.filtersData>;
+  }
+
+  get hasMobileOpen() {
+    return Object.values(this.filtersData).some((filter) => filter.isMobileOpen);
+  }
+
   constructor(private dialog: DialogService,
     private route: ActivatedRoute,
     private AuthService: AuthService,
@@ -104,7 +152,6 @@ export class GroupsComponent implements OnInit {
             } else if (engagmentsFilter === 'hasNotVoted') {
               PublicGroupService.setParam('hasVoted', false);
             } else if (engagmentsFilter === 'iCreated') {
-       //       PublicGroupService.setParam('creatorId', this.auth.user.value.id);
             }
           }
 
@@ -165,11 +212,24 @@ export class GroupsComponent implements OnInit {
     this.languageSearch$.next(event);
   }
 
+  addConditionalItems(): void {
+    if (this.loggedIn()) {
+      this.filtersData.visibility.items.push(
+        { title: 'VIEWS.PUBLIC_GROUPS.FILTERS.FAVOURITED', value: "favourite" }
+      );
+    }
+  }
+
   loggedIn() {
     return this.AuthService.loggedIn$.value;
   }
 
   ngOnInit(): void {
+    this.addConditionalItems();
+  }
+
+  chooseFilterValue (type: keyof typeof this.filtersData, option: string) {
+    this.filtersData[type].preSelectedValue = option;
   }
 
   createGroup() {
@@ -180,72 +240,61 @@ export class GroupsComponent implements OnInit {
     })
   }
 
+  getActiveFilterText(key: keyof typeof this.filtersData, val: string) {
+    const value = val === '' ? 'all' : val;
+    return this.filtersData[key].items.find((item) => item.value === value)!.title;
+  }
+
+  setFilterValue(filter: keyof typeof this.filtersData, val: string) {
+    const value = val === 'all' ? '' : val;
+    switch (filter) {
+      case 'visibility':
+        this.visibilityFilter$.next(value);
+        break;
+      case 'orderBy':
+        this.orderFilter$.next(value);
+        break;
+      case 'country':
+        this.countryFilter$.next(value);
+        break;
+      case 'language':
+        this.languageFilter$.next(value);
+        break;
+      default:
+    }
+
+    this.filtersData[filter].selectedValue = value;
+  }
+
   doSearch(search: string) {
     this.searchString$.next(search);
   }
 
-  orderBy(orderBy: string) {
-    if (orderBy === 'all') orderBy = '';
-    this.orderFilter$.next(orderBy);
-    this.groupFilters.orderBy = orderBy;
-  }
+  closeMobileFilter() {
+    const keys = this.filterKeys;
 
-  closeMobileFilter () {
-    const filtersShow = Object.entries(this.mobileFilters).find(([key, value]) => {
-      return !!value;
-    })
-    if (filtersShow) {
-      const filterName = filtersShow[0]
-      this.mobileFilters[filterName] = false;
-      if (filterName === 'language') {
-        this.languageSearch$.next(this.languageSearch);
+    keys.forEach((key) => {
+      this.filtersData[key].isMobileOpen = false;
+      this.filtersData[key].preSelectedValue = "";
+      switch(key) {
+        case "language": {
+          this.languageSearch$.next(this.languageSearch);
+          break;
+        }
+        case "country": {
+          this.countrySearch$.next(this.countrySearch);
+          break;
+        }
+        default:
       }
-      if (filterName === 'country') {
-        this.countrySearch$.next(this.countrySearch);
-      }
-    }
-  }
-
-  showMobileOverlay () {
-    const filtersShow = Object.entries(this.mobileFilters).find(([key, value]) => {
-      return !!value;
     })
-    if (filtersShow) return true;
-
-    return false;
   }
 
   doClearFilters() {
-    this.setVisibility('');
-    this.orderBy('');
-    this.setCountry('');
-    this.setLanguage('');
-    this.searchInput = '';
-    this.doSearch('');
-  }
-
-  setVisibility (visibility: string) {
-    if (visibility === 'all' || typeof visibility === 'boolean') visibility = '';
-    this.groupFilters.visibility = visibility;
-    this.visibilityFilter$.next(visibility);
-  }
-
-  setCountry(country: string) {
-    if (country === 'all' || typeof country !== 'string') country = '';
-    this.countryFilter$.next(country);
-    this.groupFilters.country = country;
-
-    this.countrySearch$.next(country);
-    this.countrySearch = country;
-  }
-
-  setLanguage(language: string) {
-    if (language === 'all' || typeof language !== 'string') language = '';
-    this.languageFilter$.next(language);
-    this.groupFilters.language = language;
-
-    this.languageSearch$.next(language);
-    this.languageSearch = language;
+    const keys = this.filterKeys;
+    keys.forEach((key) => {
+      this.setFilterValue(key, '');
+    })
   }
 
   loadPage(page: any) {

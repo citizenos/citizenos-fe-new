@@ -86,9 +86,9 @@
     "ERROR_INVALID_EMAIL": "@:MSG_ERROR_POST_API_AUTH_SIGNUP_40000_EMAIL",
     "ERROR_INVALID_MESSAEG": "Message text is missing.",
     "MSG_REQUEST_SENT": "Your help request has been sent!",
-    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough",
-    "EXTRA_INFO_TOUR_DESCRIPTION": "The walkthrough will guide you through the main features and things to do on the page.",
-    "EXTRA_INFO_TOUR_BTN_START": "Start walkthrough"
+    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough tour",
+    "EXTRA_INFO_TOUR_DESCRIPTION": "The tour will guide you through the main features and things to do on the page.",
+    "EXTRA_INFO_TOUR_BTN_START": "Start tour"
   },
   "COMPONENTS": {
     "ACCESSIBILITY": {
@@ -635,7 +635,7 @@
       "DESCRIPTION": "As this is your first time on the newly redesigned Citizen OS dashboard, we recommend you take the walkthrough tour to get to know the platform better.",
       "TAKE_A_TOUR": "The walkthrough only takes a couple of minutes.",
       "BTN_SUBMIT": "Take the tour",
-      "BTN_CANCEL": "Skip"
+      "BTN_CANCEL": "Close"
     },
     "PASSWORD_FORGOT": {
       "PLACEHOLDER_EMAIL": "@:COMPONENTS.LOGIN_FORM.LOGIN_PLACEHOLDER_EMAIL",
@@ -791,7 +791,7 @@
       "NO_FOLDERS_DESC": "Topic admins can create folders to group ideas that fit in the same category."
     },
     "TOUR": {
-      "LNK_SKIP": "Skip",
+      "LNK_SKIP": "Close",
       "LNK_BACK": "Back",
       "LNK_NEXT": "Next",
       "LNK_FINISH": "Finish",
@@ -878,9 +878,16 @@
       "TOPIC_STEP_6_TITLE": "Topic text",
       "TOPIC_STEP_6_DESC": "The topic text is the basis for the idea gathering and/or discussion and voting. The main background information will be shared here.",
       "TOPIC_STEP_6_DESC2": "By default, we will keep this collapsed, but you can expand it at any time to read the entire text.",
-      "TOPIC_STEP_7_TITLE": "Topic discussion",
-      "TOPIC_STEP_7_DESC": "The main discussion will take place here. Anyone can post a pro or con argument, or provide some additional information.",
-      "TOPIC_STEP_7_DESC2": "Other participants can agree or disagree with arguments, and post replies or reactions.",
+      "TOPIC_STEP_7_TITLE": "Engagement space",
+      "TOPIC_STEP_7_DESC": "The main engagement takes place here. Participants can share their views and interact with each other.",
+      "TOPIC_STEP_7_LBL_DISCUSSION": "Discussion:",
+      "TOPIC_STEP_7_DESC_DISCUSSION": "When the topic is in a 'discussion' phase, this is where anyone can post pro or con arguments, provide additional information, and reply to or like each other's arguments.",
+      "TOPIC_STEP_7_LBL_IDEATION": "Idea gathering:",
+      "TOPIC_STEP_7_DESC_IDEATION": "When the topic is in an 'ideas' phase, this is where participants can add ideas, and reply to or like each other's ideas.",
+      "TOPIC_STEP_7_LBL_VOTE": "Voting:",
+      "TOPIC_STEP_7_DESC_VOTE": "When the topic is in a 'voting' phase, this is where participants can cast their votes and see the results once it's ended.",
+      "TOPIC_STEP_7_LBL_FOLLOW_UP": "Action:",
+      "TOPIC_STEP_7_DESC_FOLLOW_UP": "When the topic is in an 'action' phase, this is where topic admins can post updates about actions taken as a result of the decision.",
       "TOPIC_STEP_8_TITLE": "Topic interactions",
       "HEADING_TOPIC_MOBILE": "@:COMPONENTS.TOUR.HEADING_TOPIC",
       "TOPIC_MOBILE_STEP_1_TITLE": "Topic navigation",

@@ -448,3 +448,21 @@
   width: 100%;
   flex-direction: row;
 }
+
+.mobile_filters_selection {
+  .btn_medium_plain {
+    background-color: transparent; 
+    &:hover {
+      background-color: transparent;
+    }
+    
+    &.icon {
+      svg {
+        position: static;
+      }
+    }
+    .selection {
+      width: 100%;
+    }
+  }
+}

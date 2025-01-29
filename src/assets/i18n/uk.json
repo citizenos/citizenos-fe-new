@@ -86,9 +86,9 @@
     "ERROR_INVALID_EMAIL": "@:MSG_ERROR_POST_API_AUTH_SIGNUP_40000_EMAIL",
     "ERROR_INVALID_MESSAEG": "Message text is missing.",
     "MSG_REQUEST_SENT": "Ваш запит на підтримку відправлено!",
-    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough",
-    "EXTRA_INFO_TOUR_DESCRIPTION": "The walkthrough will guide you through the main features and things to do on the page.",
-    "EXTRA_INFO_TOUR_BTN_START": "Start walkthrough"
+    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough tour",
+    "EXTRA_INFO_TOUR_DESCRIPTION": "The tour will guide you through the main features and things to do on the page.",
+    "EXTRA_INFO_TOUR_BTN_START": "Start tour"
   },
   "COMPONENTS": {
     "ACCESSIBILITY": {
@@ -635,7 +635,7 @@
       "DESCRIPTION": "As this is your first time on the newly redesigned Citizen OS dashboard, we recommend you take the walkthrough tour to get to know the platform better.",
       "TAKE_A_TOUR": "The walkthrough only takes a couple of minutes.",
       "BTN_SUBMIT": "Take the tour",
-      "BTN_CANCEL": "Skip"
+      "BTN_CANCEL": "Close"
     },
     "PASSWORD_FORGOT": {
       "PLACEHOLDER_EMAIL": "@:COMPONENTS.LOGIN_FORM.LOGIN_PLACEHOLDER_EMAIL",
@@ -791,7 +791,7 @@
       "NO_FOLDERS_DESC": "Topic admins can create folders to group ideas that fit in the same category."
     },
     "TOUR": {
-      "LNK_SKIP": "Skip",
+      "LNK_SKIP": "Close",
       "LNK_BACK": "Back",
       "LNK_NEXT": "Next",
       "LNK_FINISH": "Finish",

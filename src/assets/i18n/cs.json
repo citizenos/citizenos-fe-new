@@ -86,9 +86,9 @@
     "ERROR_INVALID_EMAIL": "@:MSG_ERROR_POST_API_AUTH_SIGNUP_40000_EMAIL",
     "ERROR_INVALID_MESSAEG": "Chybí text zprávy.",
     "MSG_REQUEST_SENT": "Vaše žádost o pomoc byla odeslána!",
-    "EXTRA_INFO_TOUR_HEADING": "Stránka, na které se nacházíte, nabízí průvodce",
-    "EXTRA_INFO_TOUR_DESCRIPTION": "Průvodce vás provede hlavními funkcemi a věcmi, které můžete udělat na stránce.",
-    "EXTRA_INFO_TOUR_BTN_START": "Zahájit průvodce"
+    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough tour",
+    "EXTRA_INFO_TOUR_DESCRIPTION": "The tour will guide you through the main features and things to do on the page.",
+    "EXTRA_INFO_TOUR_BTN_START": "Start tour"
   },
   "COMPONENTS": {
     "ACCESSIBILITY": {
@@ -635,7 +635,7 @@
       "DESCRIPTION": "As this is your first time on the newly redesigned Citizen OS dashboard, we recommend you take the walkthrough tour to get to know the platform better.",
       "TAKE_A_TOUR": "Průvodce trvá pouze několik minut.",
       "BTN_SUBMIT": "Prohlédnout",
-      "BTN_CANCEL": "Přeskočit"
+      "BTN_CANCEL": "Close"
     },
     "PASSWORD_FORGOT": {
       "PLACEHOLDER_EMAIL": "@:COMPONENTS.LOGIN_FORM.LOGIN_PLACEHOLDER_EMAIL",
@@ -791,7 +791,7 @@
       "NO_FOLDERS_DESC": "Topic admins can create folders to group ideas that fit in the same category."
     },
     "TOUR": {
-      "LNK_SKIP": "Přeskočit",
+      "LNK_SKIP": "Close",
       "LNK_BACK": "Zpět",
       "LNK_NEXT": "Další",
       "LNK_FINISH": "Dokončit",

@@ -294,19 +294,22 @@
               <!--MOBILE_TOPIC_FILTERS-->
               <div class="dropdown mobile_filters_selection mobile_show"
                 [ngClass]="{'dropdown_active': mobileIdeaFiltersList}">
-                <div class="selection">
-                  <div class="selected_item"
-                    [innerHtml]="'COMPONENTS.TOPIC_IDEATION.LBL_FILTER' | translate | titlecase"> </div>
-                  <button class="btn_medium_plain icon" (click)="mobileIdeaFiltersList = !mobileIdeaFiltersList">
+                <button class="btn_medium_plain icon" (click)="mobileIdeaFiltersList = !mobileIdeaFiltersList">
+                  <div class="selection">
+                    <div
+                      class="selected_item"
+                      [innerHtml]="'COMPONENTS.TOPIC_IDEATION.LBL_FILTER' | translate | titlecase">
+                    </div>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M17 10L12 15L7 10" stroke="#2C3B47" stroke-width="2" stroke-linecap="round" />
                     </svg>
-                  </button>
-                </div>
+                  </div>
+                </button>
+
                 <div class="options filter_options">
-                  <div class="filter_option">
-                    <span translate="COMPONENTS.TOPIC_IDEATION.IDEA_FILTER_TYPE"></span><a class="bold"
-                      (click)="mobileIdeaFilters.type = true">
+                  <a class="filter_option" (click)="mobileIdeaFilters.type = true">
+                    <span class="filter_option_text" translate="COMPONENTS.TOPIC_IDEATION.IDEA_FILTER_TYPE"></span>
+                    <span class="bold">
                       <span *ngIf="!ideaFilters.type" translate="COMPONENTS.TOPIC_IDEATION.FILTER_ALL"></span>
                       <span *ngIf="ideaFilters.type === 'iCreated'">
                         {{'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_YOUR_IDEAS' |
@@ -318,11 +321,11 @@
                         {{'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_MODERATED'
                         |
                         translate}}</span>
-                    </a>
-                  </div>
-                  <div class="filter_option">
-                    <span translate="COMPONENTS.TOPIC_IDEATION.IDEA_FILTER_ORDER"></span><a class="bold"
-                      (click)="mobileIdeaFilters.orderBy = true">
+                    </span>
+                  </a>
+                  <a class="filter_option" (click)="mobileIdeaFilters.orderBy = true">
+                    <span class="filter_option_text" translate="COMPONENTS.TOPIC_IDEATION.IDEA_FILTER_ORDER"></span>
+                    <span class="bold">
                       <span *ngIf="!ideaFilters.orderBy" translate="COMPONENTS.TOPIC_IDEATION.FILTER_ALL"></span>
                       <span *ngIf="ideaFilters.orderBy === 'likes'">
                         {{'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_LIKED' |
@@ -335,15 +338,15 @@
                         {{'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_REPLIES'
                         |
                         translate}}</span>
-                    </a>
-                  </div>
-                  <div class="filter_option">
-                    <span translate="COMPONENTS.TOPIC_IDEATION.IDEA_FILTER_PARTICIPANTS"></span><a class="bold"
-                      (click)="mobileIdeaFilters.participants = true">{{(ideaFilters.participants.name)?
+                    </span>
+                  </a>
+                  <a class="filter_option" (click)="mobileIdeaFilters.participants = true">
+                    <span class="filter_option_text" translate="COMPONENTS.TOPIC_IDEATION.IDEA_FILTER_PARTICIPANTS"></span>
+                    <span class="bold">{{(ideaFilters.participants.name)?
                       ideaFilters.participants.name :
                       'COMPONENTS.TOPIC_IDEATION.FILTER_ALL' |
-                      translate | titlecase}}</a>
-                  </div>
+                      translate | titlecase}}</span>
+                  </a>
                   <button (click)="doClearFilters()" class="btn_medium_plain">
                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path
@@ -355,86 +358,95 @@
                     </svg>
                     <span translate="COMPONENTS.TOPIC_IDEATION.BTN_RESET_FILTERS"></span>
                   </button>
-                  <!--div class="input_area">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M14.1922 15.6064C13.0236 16.4816 11.5723 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10C17 11.5723 16.4816 13.0236 15.6064 14.1922L19.7071 18.2929C20.0976 18.6834 20.0976 19.3166 19.7071 19.7071C19.3166 20.0976 18.6834 20.0976 18.2929 19.7071L14.1922 15.6064ZM15 10C15 12.7614 12.7614 15 10 15C7.23858 15 5 12.7614 5 10C5 7.23858 7.23858 5 10 5C12.7614 5 15 7.23858 15 10Z"
-                        fill="#727C84" />
-                    </svg>
-                    <cos-input placeholder="{{'VIEWS.GROUP.PLACEHOLDER_SEARCH_TOPICS' | translate}}">
-                      <input placeholder="{{'VIEWS.GROUP.PLACEHOLDER_SEARCH_TOPICS' | translate}}" type="text"
-                        [(ngModel)]="searchIdeasInput" (ngModelChange)="searchIdeas(searchIdeasInput)">
-                    </cos-input>
-                    <a class="clear_search" translate="VIEWS.GROUP.LNK_CLEAR"
-                      (click)="searchIdeasInput='';searchIdeas('')" *ngIf="searchIdeasInput"></a>
-                  </!--div-->
                 </div>
               </div>
+
               <div class="overlay" *ngIf="showMobileOverlay()" (click)="closeMobileFilter();"></div>
+              
               <div class="mobile_filters_wrap" [ngClass]="{'active': showMobileOverlay()}">
                 <div class="options button_options" *ngIf="mobileIdeaFilters.type">
-                  <label class="checkbox" (click)="mobileIdeaFilters.type = 'all';">
-                    <span [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ALL' | translate | titlecase"></span>
-                    <input type="radio" name="type">
-                    <span class="checkmark"></span>
-                  </label>
+                  <a class="btn_medium_close icon" (click)="closeMobileFilter()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.5858 12L5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L12 13.4142L17.2929 18.7071C17.6834 19.0976 18.3166 19.0976 18.7071 18.7071C19.0976 18.3166 19.0976 17.6834 18.7071 17.2929L13.4142 12L18.7071 6.70711C19.0976 6.31658 19.0976 5.68342 18.7071 5.29289C18.3166 4.90237 17.6834 4.90237 17.2929 5.29289L12 10.5858L6.70711 5.29289Z"
+                        fill="#2C3B47" />
+                    </svg>
+                  </a>
 
-                  <label class="checkbox" *ngIf="(AuthService.loggedIn$ | async)"
-                    (click)="mobileIdeaFilters.type = 'iCreated';">
-                    <span
-                      [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_YOUR_IDEAS' | translate | titlecase"></span>
-                    <input type="radio" name="type">
-                    <span class="checkmark"></span>
-                  </label>
+                  <div class="options_wrapper">
+                    <label class="checkbox" (click)="mobileIdeaFilters.type = 'all';">
+                      <span [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ALL' | translate | titlecase"></span>
+                      <input type="radio" name="type">
+                      <span class="checkmark"></span>
+                    </label>
+  
+                    <label class="checkbox" *ngIf="(AuthService.loggedIn$ | async)"
+                      (click)="mobileIdeaFilters.type = 'iCreated';">
+                      <span
+                        [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_YOUR_IDEAS' | translate | titlecase"></span>
+                      <input type="radio" name="type">
+                      <span class="checkmark"></span>
+                    </label>
+  
+                    <label class="checkbox" *ngIf="(AuthService.loggedIn$ | async)"
+                      (click)="mobileIdeaFilters.type = 'favourite';">
+                      <span
+                        [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_FAVOURITES' | translate | titlecase"></span>
+                      <input type="radio" name="type">
+                      <span class="checkmark"></span>
+                    </label>
+  
+                    <label class="checkbox" (click)="mobileIdeaFilters.type = 'showModerated';">
+                      <span
+                        [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_MODERATED' | translate | titlecase"></span>
+                      <input type="radio" name="type">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
 
-                  <label class="checkbox" *ngIf="(AuthService.loggedIn$ | async)"
-                    (click)="mobileIdeaFilters.type = 'favourite';">
-                    <span
-                      [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_FAVOURITES' | translate | titlecase"></span>
-                    <input type="radio" name="type">
-                    <span class="checkmark"></span>
-                  </label>
-
-                  <label class="checkbox" (click)="mobileIdeaFilters.type = 'showModerated';">
-                    <span
-                      [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_MODERATED' | translate | titlecase"></span>
-                    <input type="radio" name="type">
-                    <span class="checkmark"></span>
-                  </label>
                   <button class="btn_medium_secondary"
                     (click)="setType(mobileIdeaFilters.type);mobileIdeaFilters.type= false;"
                     translate="COMPONENTS.TOPIC_IDEATION.BTN_APPLY"></button>
                 </div>
 
                 <div class="options button_options" *ngIf="mobileIdeaFilters.orderBy">
-
-                  <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'all';">
-                    <span [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ALL' | translate | titlecase"></span>
-                    <input type="radio" name="orderBy">
-                    <span class="checkmark"></span>
-                  </label>
-
-                  <label *ngIf="(AuthService.loggedIn$ | async)" class="checkbox"
-                    (click)="mobileIdeaFilters.orderBy = 'likes';">
-                    <span
-                      [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_LIKED' | translate | titlecase"></span>
-                    <input type="radio" name="orderBy">
-                    <span class="checkmark"></span>
-                  </label>
-
-                  <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'recent';">
-                    <span
-                      [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_RECENT' | translate | titlecase"></span>
-                    <input type="radio" name="orderBy">
-                    <span class="checkmark"></span>
-                  </label>
-
-                  <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'replies';">
-                    <span
-                      [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_REPLIES' | translate | titlecase"></span>
-                    <input type="radio" name="orderBy">
-                    <span class="checkmark"></span>
-                  </label>
+                  <a class="btn_medium_close icon" (click)="closeMobileFilter()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.5858 12L5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L12 13.4142L17.2929 18.7071C17.6834 19.0976 18.3166 19.0976 18.7071 18.7071C19.0976 18.3166 19.0976 17.6834 18.7071 17.2929L13.4142 12L18.7071 6.70711C19.0976 6.31658 19.0976 5.68342 18.7071 5.29289C18.3166 4.90237 17.6834 4.90237 17.2929 5.29289L12 10.5858L6.70711 5.29289Z"
+                        fill="#2C3B47" />
+                    </svg>
+                  </a>
+                  
+                  <div class="options_wrapper">
+                    <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'all';">
+                      <span [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ALL' | translate | titlecase"></span>
+                      <input type="radio" name="orderBy">
+                      <span class="checkmark"></span>
+                    </label>
+  
+                    <label *ngIf="(AuthService.loggedIn$ | async)" class="checkbox"
+                      (click)="mobileIdeaFilters.orderBy = 'likes';">
+                      <span
+                        [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_LIKED' | translate | titlecase"></span>
+                      <input type="radio" name="orderBy">
+                      <span class="checkmark"></span>
+                    </label>
+  
+                    <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'recent';">
+                      <span
+                        [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_RECENT' | translate | titlecase"></span>
+                      <input type="radio" name="orderBy">
+                      <span class="checkmark"></span>
+                    </label>
+  
+                    <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'replies';">
+                      <span
+                        [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_REPLIES' | translate | titlecase"></span>
+                      <input type="radio" name="orderBy">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
 
                   <button class="btn_medium_secondary"
                     (click)="orderBy(mobileIdeaFilters.orderBy);mobileIdeaFilters.orderBy= false;"
@@ -442,43 +454,44 @@
                 </div>
 
                 <div class="options button_options" *ngIf="mobileIdeaFilters.participants">
+                  <a class="btn_medium_close icon" (click)="closeMobileFilter()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.5858 12L5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L12 13.4142L17.2929 18.7071C17.6834 19.0976 18.3166 19.0976 18.7071 18.7071C19.0976 18.3166 19.0976 17.6834 18.7071 17.2929L13.4142 12L18.7071 6.70711C19.0976 6.31658 19.0976 5.68342 18.7071 5.29289C18.3166 4.90237 17.6834 4.90237 17.2929 5.29289L12 10.5858L6.70711 5.29289Z"
+                        fill="#2C3B47" />
+                    </svg>
+                  </a>
 
-
-                  <label class="checkbox" (click)="mobileIdeaFilters.participants = 'all'">
-                    <span translate="COMPONENTS.TOPIC_IDEATION.FILTER_ALL"></span>
-                    <input type="radio" name="participants">
-                    <span class="checkmark"></span>
-                  </label>
-                  <ng-container *ngIf="participants$ | async as participants;">
-                    <ng-container *ngFor="let user of participants">
-                      <label class="checkbox" (click)="mobileIdeaFilters.participants = user">
-                        <div class="author_wrap">
-                          <div class="image_wrap">
-                            <img class="profile_image" *ngIf="user.imageUrl" [src]="user.imageUrl">
-                            <div class="profile_image_filler" *ngIf="!user.imageUrl">
-                              <cos-initials *ngIf="user.name" [name]="user.name">
-                              </cos-initials>
-                            </div>
-                          </div>
-                          <div class="author_name">
-                            {{user.name}}
-                          </div>
-                        </div>
-
-                        <input type="radio" name="participants">
-                        <span class="checkmark"></span>
-                      </label>
-                    </ng-container>
-                  </ng-container>
-
-                  <!--ng-container *ngIf="countries$ | async as countries">
-                    <label class="checkbox" *ngFor="let country of countries"
-                      (click)="mobileIdeaFilters.country = country.name">
-                      <span>{{country.name}}</span>
-                      <input type="radio" name="country">
+                  <div class="options_wrapper">
+                    <label class="checkbox" (click)="mobileIdeaFilters.participants = 'all'">
+                      <span translate="COMPONENTS.TOPIC_IDEATION.FILTER_ALL"></span>
+                      <input type="radio" name="participants">
                       <span class="checkmark"></span>
                     </label>
-                  </!--ng-container-->
+  
+                    <ng-container *ngIf="participants$ | async as participants;">
+                      <ng-container *ngFor="let user of participants">
+                        <label class="checkbox" (click)="mobileIdeaFilters.participants = user">
+                          <div class="author_wrap">
+                            <div class="image_wrap">
+                              <img class="profile_image" *ngIf="user.imageUrl" [src]="user.imageUrl">
+                              <div class="profile_image_filler" *ngIf="!user.imageUrl">
+                                <cos-initials *ngIf="user.name" [name]="user.name">
+                                </cos-initials>
+                              </div>
+                            </div>
+                            <div class="author_name">
+                              {{user.name}}
+                            </div>
+                          </div>
+  
+                          <input type="radio" name="participants">
+                          <span class="checkmark"></span>
+                        </label>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+
                   <button class="btn_medium_secondary"
                     (click)="setParticipant(mobileIdeaFilters.participants);mobileIdeaFilters.participants= false;"
                     translate="COMPONENTS.TOPIC_IDEATION.BTN_APPLY"></button>

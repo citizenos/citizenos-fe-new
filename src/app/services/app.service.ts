@@ -8,7 +8,7 @@ import { TopicNotificationSettingsComponent } from '../topic/components/topic-no
 import { ConfigService } from './config.service';
 import { TopicService } from './topic.service';
 import { LocationService } from '@services/location.service';
-import { GroupMemberTopicService } from './group-member-topic.service';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 import { Router } from '@angular/router';
 import { LoginDialogComponent } from '../account/components/login/login.component';
 import { RegisterDialogComponent } from '../account/components/register/register.component';
@@ -16,7 +16,7 @@ import { CreateComponent } from 'src/app/core/components/create/create.component
 import { ActivityFeedDialogComponent } from '../core/components/activity-feed/activity-feed.component';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../interfaces/apiResponse';
-import { Title, Meta, MetaDefinition } from '@angular/platform-browser';
+import { Title, Meta } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
 declare let hwcrypto: any;
@@ -50,17 +50,18 @@ export class AppService {
     text: ''
   });
 
-  constructor(private dialog: DialogService,
-    private Title: Title,
-    private Meta: Meta,
-    private translate: TranslateService,
-    public config: ConfigService,
-    private Location: LocationService,
-    private TopicService: TopicService,
-    private GroupMemberTopicService: GroupMemberTopicService,
-    private router: Router,
-    private AuthService: AuthService,
-    private http: HttpClient) { }
+  constructor(
+    private readonly dialog: DialogService,
+    private readonly Title: Title,
+    private readonly Meta: Meta,
+    private readonly translate: TranslateService,
+    public readonly config: ConfigService,
+    private readonly Location: LocationService,
+    private readonly TopicService: TopicService,
+    private readonly TopicMemberUserService: TopicMemberUserService,
+    private readonly router: Router,
+    private readonly AuthService: AuthService,
+    private readonly http: HttpClient) { }
 
   showMobile() {
     return window.innerWidth <= 560;
@@ -98,7 +99,10 @@ export class AppService {
   }
 
   doShowTopicNotificationSettings(topicId: string) {
-    this.dialog.open(TopicNotificationSettingsComponent, { data: { topicId } });
+    const topicSettingsDialog = this.dialog.open(TopicNotificationSettingsComponent, { data: { topicId } });
+    topicSettingsDialog.afterClosed().subscribe(() => {
+      this.TopicMemberUserService.reload();
+    })
   }
 
   isTouchDevice() {
@@ -109,7 +113,7 @@ export class AppService {
     this.AuthService.logout()
       .pipe(take(1))
       .subscribe({
-        next: (done) => {
+        next: () => {
           this.AuthService.reloadUser();
           setTimeout(() => {
             this.router.navigate(['/']);
@@ -165,13 +169,11 @@ export class AppService {
       case hwcrypto.USER_CANCEL:
       case hwcrypto.NO_IMPLEMENTATION:
         return errorKeyPrefix + err.message.toUpperCase();
-        break;
       case hwcrypto.INVALID_ARGUMENT:
       case hwcrypto.NOT_ALLOWED:
       case hwcrypto.TECHNICAL_ERROR:
         console.error(err.message, 'Technical error from HWCrypto library', err);
         return errorKeyPrefix + 'TECHNICAL_ERROR';
-        break;
       default:
         console.error(err.message, 'Unknown error from HWCrypto library', err);
         return errorKeyPrefix + 'TECHNICAL_ERROR';

@@ -215,16 +215,6 @@ export class TopicFormComponent {
         }
       ));
 
-    /*  this.groups$ = this.GroupService.loadItems().pipe(map((groups) => {
-        groups.forEach((group: any) => {
-          if (this.groupId && this.groupId === group.id) {
-            const exists = this.topicGroups.find((mgroup) => mgroup.id === group.id);
-            if (!exists) this.addGroup(group);
-          }
-        });
-
-      }));*/
-
     this.tabSelected = this.route.fragment.pipe(
       map((fragment) => {
         if (!fragment) {
@@ -343,53 +333,59 @@ export class TopicFormComponent {
   }
 
   nextTab(tab: string | void) {
-    if (tab === 'info') {
-      let invalid = false;
-      if (!this.topic.title) {
-        this.block.title = true;
-        invalid = true;
-        setTimeout(() => {
-          this.titleInput?.nativeElement?.parentNode.parentNode.classList.add('error');
-        });
-      }
-      if (invalid) {
-        return
-      }
+    if (!tab) return;
+
+    const tabIndex = this.tabs.indexOf(tab);
+    if (tabIndex === -1 || tabIndex >= 3) return;
+
+    // Validate info tab
+    if (tab === 'info' && !this.validateInfoTab()) return;
+
+    // Validate discussion tab
+    if (tabIndex === 2 && !this.validateDiscussionTab()) return;
+
+    // Handle preview tab
+    if (tabIndex + 1 === 3) {
+      this.loadPreviewTab();
     }
+
     window.scrollTo(0, 0);
-    if (tab) {
-      let tabIndex = this.tabs.indexOf(tab);
-      if (tab === 'info' && this.topic.permission.level === this.TopicService.LEVELS.edit) tabIndex = tabIndex + 1;
-      if (tabIndex > -1 && tabIndex < 3) {
-        this.selectTab(this.tabs[tabIndex + 1]);
-      }
-      if (tabIndex === 2) {
-        if (!this.discussion.question) {
-          this.Notification.removeAll();
-          this.Notification.addError(this.translate.instant('VIEWS.TOPIC_CREATE.ERROR_MISSING_QUESTION'));
-          return;
-        }
-        /*  if (this.voteCreateForm)
-            this.voteCreateForm.saveVoteSettings();*/
-      }
-      if (tabIndex + 1 === 3) {
-        setTimeout(() => {
-          this.TopicService.readDescription(this.topic.id).pipe(take(1)).subscribe({
-            next: (topic) => {
-              this.topic.description = topic.description;
-            },
-            error: (err) => {
-              console.error(err)
-            }
-          });
-        }, 200)
-      }
-      if (tabIndex > -1 && tabIndex < 3) {
-        setTimeout(() => {
-          this.selectTab(this.tabs[tabIndex + 1]);
-        })
-      }
+    setTimeout(() => {
+      this.selectTab(this.tabs[tabIndex + 1]);
+    });
+  }
+
+  private validateInfoTab(): boolean {
+    if (!this.topic.title) {
+      this.block.title = true;
+      setTimeout(() => {
+        this.titleInput?.nativeElement?.parentNode.parentNode.classList.add('error');
+      });
+      return false;
     }
+    return true;
+  }
+
+  private validateDiscussionTab(): boolean {
+    if (!this.discussion.question) {
+      this.Notification.removeAll();
+      this.Notification.addError(this.translate.instant('VIEWS.TOPIC_CREATE.ERROR_MISSING_QUESTION'));
+      return false;
+    }
+    return true;
+  }
+
+  private loadPreviewTab(): void {
+    setTimeout(() => {
+      this.TopicService.readDescription(this.topic.id).pipe(take(1)).subscribe({
+        next: (topic) => {
+          this.topic.description = topic.description;
+        },
+        error: (err) => {
+          console.error(err)
+        }
+      });
+    }, 200);
   }
 
   previousTab(tab: string | void) {
@@ -417,7 +413,6 @@ export class TopicFormComponent {
   fileUpload() {
     const allowedTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
     const files = this.fileInput?.nativeElement.files;
-    console.log(files, files[0].size);
     if (allowedTypes.indexOf(files[0].type) < 0) {
       this.error = { image: this.translate.instant('MSG_ERROR_FILE_TYPE_NOT_ALLOWED', { allowedFileTypes: allowedTypes.toString() }) };
       this.Notification.addError(this.translate.instant('MSG_ERROR_FILE_TYPE_NOT_ALLOWED', { allowedFileTypes: allowedTypes.toString() }));
@@ -425,7 +420,7 @@ export class TopicFormComponent {
         delete this.error.image;
       }, 5000)
     } else if (files[0].size > 5000000) {
-      //    this.Notification.addError(this.translate.instant('MSG_ERROR_FILE_TOO_LARGE', { allowedFileSize: '5MB' }));
+      // this.Notification.addError(this.translate.instant('MSG_ERROR_FILE_TOO_LARGE', { allowedFileSize: '5MB' }));
       this.error = { image: this.translate.instant('MSG_ERROR_FILE_TOO_LARGE', { allowedFileSize: '5MB' }) };
 
       setTimeout(() => {
@@ -562,7 +557,9 @@ export class TopicFormComponent {
 
   publish() {
     this.titleInput?.nativeElement?.parentNode.parentNode.classList.remove('error');
-    this.topic.status = this.TopicService.STATUSES.inProgress;
+    if (this.TopicService.STATUSES.draft === this.topic.status) {
+      this.topic.status = this.TopicService.STATUSES.inProgress;
+    }
     const updateTopic = { ...this.topic };
     if (!updateTopic.intro?.length) {
       updateTopic.intro = null;
@@ -789,7 +786,7 @@ export class TopicFormComponent {
   }
 
   canEditDiscussion() {
-    return this.TopicService.canDelete(this.topic) && (this.topic.status !== this.TopicService.STATUSES.draft || this.topic.status !== this.TopicService.STATUSES.inProgress);
+    return this.TopicService.canDelete(this.topic) && (this.topic.status === this.TopicService.STATUSES.draft || this.topic.status === this.TopicService.STATUSES.inProgress);
   }
 
   toggleDeadline() {

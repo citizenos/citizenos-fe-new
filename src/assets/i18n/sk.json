@@ -86,9 +86,9 @@
     "ERROR_INVALID_EMAIL": "@:MSG_ERROR_POST_API_AUTH_SIGNUP_40000_EMAIL",
     "ERROR_INVALID_MESSAEG": "Chýba text správy.",
     "MSG_REQUEST_SENT": "Vaša žiadosť o pomoc bola odoslaná!",
-    "EXTRA_INFO_TOUR_HEADING": "Stránka, na ktorej sa nachádzate, ponúka prehľad",
-    "EXTRA_INFO_TOUR_DESCRIPTION": "Tento návod vás prevedie hlavnými funkciami a činnosťami na stránke.",
-    "EXTRA_INFO_TOUR_BTN_START": "Spustiť prehľad"
+    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough tour",
+    "EXTRA_INFO_TOUR_DESCRIPTION": "The tour will guide you through the main features and things to do on the page.",
+    "EXTRA_INFO_TOUR_BTN_START": "Start tour"
   },
   "COMPONENTS": {
     "ACCESSIBILITY": {
@@ -635,7 +635,7 @@
       "DESCRIPTION": "Keďže ste na vynovenom ovládacom paneli Citizen OS prvýkrát, odporúčame vám absolvovať prehliadku, aby ste sa s platformou lepšie zoznámili.",
       "TAKE_A_TOUR": "Prehliadka zaberie len pár minút.",
       "BTN_SUBMIT": "Absolvujte prehliadku",
-      "BTN_CANCEL": "Preskočiť"
+      "BTN_CANCEL": "Close"
     },
     "PASSWORD_FORGOT": {
       "PLACEHOLDER_EMAIL": "@:COMPONENTS.LOGIN_FORM.LOGIN_PLACEHOLDER_EMAIL",
@@ -791,7 +791,7 @@
       "NO_FOLDERS_DESC": "Admini témy môžu vytvárať priečinky, kde sa zoskupia nápady spadajúce do rovnakej kategórie."
     },
     "TOUR": {
-      "LNK_SKIP": "Preskočiť",
+      "LNK_SKIP": "Close",
       "LNK_BACK": "Späť",
       "LNK_NEXT": "Ďalej",
       "LNK_FINISH": "Dokončiť",

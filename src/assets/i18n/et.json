@@ -86,9 +86,9 @@
     "ERROR_INVALID_EMAIL": "@:MSG_ERROR_POST_API_AUTH_SIGNUP_40000_EMAIL",
     "ERROR_INVALID_MESSAEG": "Sõnumi tekst puudub.",
     "MSG_REQUEST_SENT": "Sinu abitaotlus on saadetud!",
-    "EXTRA_INFO_TOUR_HEADING": "Leht, millel asud, pakub ülevaadet",
-    "EXTRA_INFO_TOUR_DESCRIPTION": "Tuur juhatab sind läbi peamiste funktsioonide ja tegevuste, mida sellel lehel on võimalik teha.",
-    "EXTRA_INFO_TOUR_BTN_START": "Alusta tuuriga"
+    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough tour",
+    "EXTRA_INFO_TOUR_DESCRIPTION": "The tour will guide you through the main features and things to do on the page.",
+    "EXTRA_INFO_TOUR_BTN_START": "Start tour"
   },
   "COMPONENTS": {
     "ACCESSIBILITY": {
@@ -635,7 +635,7 @@
       "DESCRIPTION": "Kuna oled esimest korda värskelt ümber kujundatud Citizen OS-i töölaual, siis soovitame sul platvormi paremaks tundma õppimiseks läbi teha ringkäik.",
       "TAKE_A_TOUR": "Tuur võtab aega vaid paar minutit.",
       "BTN_SUBMIT": "Tee ringkäik",
-      "BTN_CANCEL": "Jäta vahele"
+      "BTN_CANCEL": "Close"
     },
     "PASSWORD_FORGOT": {
       "PLACEHOLDER_EMAIL": "@:COMPONENTS.LOGIN_FORM.LOGIN_PLACEHOLDER_EMAIL",
@@ -791,7 +791,7 @@
       "NO_FOLDERS_DESC": "Teemade administraatorid saavad luua kaustu samasse kategooriasse sobivate ideede rühmitamiseks."
     },
     "TOUR": {
-      "LNK_SKIP": "Jäta vahele",
+      "LNK_SKIP": "Close",
       "LNK_BACK": "Tagasi",
       "LNK_NEXT": "Edasi",
       "LNK_FINISH": "Lõpeta",

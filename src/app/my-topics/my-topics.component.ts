@@ -19,7 +19,6 @@ import { Language } from '@interfaces/language';
   styleUrls: ['./my-topics.component.scss'],
   animations: [
     trigger('openClose', [
-      // ...
       state('open', style({
         'maxHeight': '300px',
         transition: '0.2s ease-in-out max-height'
@@ -38,15 +37,6 @@ export class MyTopicsComponent {
   topics$ = of(<Topic[] | any[]>[]);
 
   allTopics$: Topic[] = [];
-  topicFilters = {
-    visibility: '',
-    category: '',
-    status: '',
-    country: '',
-    orderBy: '',
-    engagements: '',
-    language: ''
-  };
 
   topicTypeFilter$ = new BehaviorSubject('');
   engagmentsFilter$ = new BehaviorSubject('');
@@ -56,21 +46,9 @@ export class MyTopicsComponent {
   countryFilter$ = new BehaviorSubject('');
   languageFilter$ = new BehaviorSubject('');
 
-  mobileFilters: any = {
-    type: false,
-    category: false,
-    status: false,
-    orderBy: false,
-    engagements: false,
-    country: false,
-    language: false,
-  }
-
   mobileFiltersList = false;
   showCreate = false;
-  categories$ = Object.keys(this.Topic.CATEGORIES);
 
-  statuses$ = Object.keys(this.Topic.STATUSES);
   countrySearch = '';
   countrySearch$ = new BehaviorSubject('');
   countries = countries.sort((a: any, b: any) => {
@@ -86,6 +64,107 @@ export class MyTopicsComponent {
   languages$ = of(<Language[]>[]);
   filtersSet = false;
 
+  filtersData = {
+    visibility: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_TOPIC_TYPE",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'VIEWS.MY_TOPICS.FILTER_ALL', value: "all"},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.MY_PUBLIC_TOPICS', value: this.Topic.VISIBILITY.public},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.MY_PRIVATE_TOPICS', value: this.Topic.VISIBILITY.private},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.TOPICS_MODERATED', value: "showModerated"},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.TOPICS_FAVOURITED', value: "favourite"},
+      ]
+    },
+    engagements: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_MY_ENGAGEMENT",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'VIEWS.MY_TOPICS.FILTER_ALL', value: "all"},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.TOPICS_I_HAVE_VOTED', value: "hasVoted"},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.TOPICS_I_HAVE_NOT_VOTED', value: "hasNotVoted"},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.TOPICS_I_CREATED', value: "iCreated"},
+      ]
+    },
+    status: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_STATUS",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'TXT_TOPIC_STATUS_ALL', value: "all"},
+        ...Object.keys(this.Topic.STATUSES).map((status) => {
+          return { title: `TXT_TOPIC_STATUS_${status}`, value: status }
+        }),
+      ]
+    },
+    orderBy: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_ORDER",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'VIEWS.MY_TOPICS.FILTER_ALL', value: "all"},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.ORDER_MOST_PARTICIPANTS', value: "membersCount"},
+        { title: 'VIEWS.MY_TOPICS.FILTERS.ORDER_MOST_RECENT', value: "created"},
+      ]
+    },
+    category: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_CATEGORIES",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'TXT_TOPIC_CATEGORY_ALL', value: "all"},
+        ...Object.keys(this.Topic.CATEGORIES).map((cat) => {
+          return { title: `TXT_TOPIC_CATEGORY_${cat}`, value: cat }
+        }),
+      ]
+    },
+    country: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_COUNTRY",
+      selectedValue: "",
+      preSelectedValue: "",
+      /**
+       * @note Only for desktop. For mobile it looks for observable.
+       */
+      items: [
+        { title: 'VIEWS.MY_TOPICS.FILTER_ALL', value: "all"},
+        ...this.countries.map((it) => {
+          return { title: it.name, value: it.name }
+        }),
+      ]
+    },
+    language: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_LANGUAGE",
+      selectedValue: "",
+      preSelectedValue: "",
+      /**
+       * @note Only for desktop. For mobile it looks for observable.
+       */
+      items: [
+        { title: 'VIEWS.MY_GROUPS.FILTER_ALL', value: "all"},
+        ...this.languages.map((it) => {
+          return { title: it.name, value: it.name }
+        }),
+      ]
+    },
+  };
+
+  get filterKeys() {
+    return Object.keys(this.filtersData) as Array<keyof typeof this.filtersData>;
+  }
+
+  get hasMobileOpen() {
+    return Object.values(this.filtersData).some((filter) => filter.isMobileOpen);
+  }
+
   constructor(
     public Topic: TopicService,
     public UserTopicService: UserTopicService,
@@ -100,7 +179,6 @@ export class MyTopicsComponent {
       .pipe(
         switchMap(([topicTypeFilter, engagmentsFilter, statusFilter, orderFilter, categoryFilter, countryFilter, languageFilter, search]) => {
           UserTopicService.reset();
-       //   UserTopicService.setParam('include', ['vote', 'event']);
           this.allTopics$ = [];
           if (topicTypeFilter) {
             if (UserTopicService.VISIBILITY.indexOf(topicTypeFilter) > -1) {
@@ -172,29 +250,24 @@ export class MyTopicsComponent {
     this.showCreate = !this.showCreate;
   }
 
-  showMobileOverlay() {
-    const filtersShow = Object.entries(this.mobileFilters).find(([key, value]) => {
-      return !!value;
-    })
-    if (filtersShow) return true;
-
-    return false;
-  }
-
   closeMobileFilter() {
-    const filtersShow = Object.entries(this.mobileFilters).find(([key, value]) => {
-      return !!value;
+    const keys = this.filterKeys;
+
+    keys.forEach((key) => {
+      this.filtersData[key].isMobileOpen = false;
+      this.filtersData[key].preSelectedValue = "";
+      switch(key) {
+        case "language": {
+          this.languageSearch$.next(this.languageSearch);
+          break;
+        }
+        case "country": {
+          this.countrySearch$.next(this.countrySearch);
+          break;
+        }
+        default:
+      }
     })
-    if (filtersShow) {
-      const filterName = filtersShow[0]
-      this.mobileFilters[filterName] = false;
-      if (filterName === 'language') {
-        this.languageSearch$.next(this.languageSearch);
-      }
-      if (filterName === 'country') {
-        this.countrySearch$.next(this.countrySearch);
-      }
-    }
   }
 
   searchCountry(event: any) {
@@ -205,46 +278,43 @@ export class MyTopicsComponent {
     this.languageSearch$.next(event);
   }
 
-  orderBy(orderBy: string) {
-    if (orderBy === 'all' || typeof orderBy !== 'string') orderBy = '';
-    this.orderFilter$.next(orderBy);
-    this.topicFilters.orderBy = orderBy;
+  chooseFilterValue (type: keyof typeof this.filtersData, option: string) {
+    this.filtersData[type].preSelectedValue = option;
   }
 
-  setStatus(status: string) {
-    if (status === 'all' || typeof status !== 'string') status = '';
-    this.statusFilter$.next(status);
-    this.topicFilters.status = status;
+  setFilterValue(filter: keyof typeof this.filtersData, val: string) {
+    const value = val === 'all' ? '' : val;
+    switch (filter) {
+      case 'visibility':
+        this.topicTypeFilter$.next(value);
+        break;
+      case 'status':
+        this.statusFilter$.next(value);
+        break;
+      case 'orderBy':
+        this.orderFilter$.next(value);
+        break;
+      case 'engagements':
+        this.engagmentsFilter$.next(value);
+        break;
+      case 'category':
+        this.categoryFilter$.next(value);
+        break;
+      case 'country':
+        this.countryFilter$.next(value);
+        break;
+      case 'language':
+        this.languageFilter$.next(value);
+        break;
+      default:
+    }
+
+    this.filtersData[filter].selectedValue = value;
   }
 
-  setVisibility(visibility: string) {
-    if (visibility === 'all' || typeof visibility !== 'string') visibility = '';
-    this.topicTypeFilter$.next(visibility);
-    this.topicFilters.visibility = visibility;
-  }
-
-  setCategory(category: string) {
-    if (category === 'all' || typeof category !== 'string') category = '';
-    this.categoryFilter$.next(category);
-    this.topicFilters.category = category;
-  }
-
-  setFilter(filter: string) {
-    if (filter === 'all' || typeof filter !== 'string') filter = '';
-    this.engagmentsFilter$.next(filter);
-    this.topicFilters.engagements = filter;
-  }
-
-  setCountry(country: string) {
-    if (country === 'all' || typeof country !== 'string') country = '';
-    this.countryFilter$.next(country);
-    this.topicFilters.country = country;
-  }
-
-  setLanguage(language: string) {
-    if (language === 'all' || typeof language !== 'string') language = '';
-    this.languageFilter$.next(language);
-    this.topicFilters.language = language;
+  getActiveFilterText(key: keyof typeof this.filtersData, val: string) {
+    const value = val === '' ? 'all' : val;
+    return this.filtersData[key].items.find((item) => item.value === value)!.title;
   }
 
   doSearch(search: string) {
@@ -252,18 +322,14 @@ export class MyTopicsComponent {
   }
 
   onSelect(id: string) {
-    // this.UserTopicService.filterTopics(id);
     this.router.navigate([], { relativeTo: this.route, queryParams: { filter: id } });
   }
 
   doClearFilters() {
-    this.setVisibility('');
-    this.setFilter('');
-    this.orderBy('');
-    this.setStatus('');
-    this.setCategory('');
-    this.setCountry('');
-    this.setLanguage('');
+    const keys = this.filterKeys;
+    keys.forEach((key) => {
+      this.setFilterValue(key, '');
+    })
   }
 
   loadPage(page: any) {

@@ -369,7 +369,7 @@ export class TopicComponent {
   }
 
   closeTopic(topic: Topic) {
-    this.TopicService.changeState(topic, this.TopicService.STATUSES.closed);
+    this.TopicService.changeState(topic, "closed");
   }
 
   joinTopic(topic: Topic) {

@@ -1,3 +1,13 @@
+## 2025-01-29 - v1.2.2
+  * Fix: Issue #307 - Add participants to public topics automatically when they engage (add idea, like, vote, etc)
+  * Fix: Issue #1657 - GROUPS: Bugs in last edit and/or order of public topics displayed within public group
+  * Fix: Issue #1678 - TOUR: 'Topic discussion' part of tour not relevant during other phases and slides off to top left corner
+  * Fix: Issue #1680 - TOUR: Add 'the page you're on offers a walkthrough' to Help panel for DB and all screen sizes
+  * Fix: Issue #1684 - TOPIC: Adding actions doesn't lock the topic
+  * Fix: Issue #1737 - AF: Clicking on 'liked an idea' update in Topic AF takes you to DB
+  * Fix: Issue #1739 - TOPICS: In topics starting with idea gathering, 'File too large' message not showing for header image uploads
+  * Fix: Issue #1796 - MISC: 'About' button broken - leads to 404 page
+
 ## 2025-01-15 - v1.2.1
   * Fix: Issue #1653 - TOPICS: No way to close long filter dropdowns on mobile except back button, which take you too far back
   * Fix: Issue #1654 - TOPICS: On mobile, filter buttons need to be 'active' all the way across

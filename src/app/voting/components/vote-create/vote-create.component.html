@@ -283,7 +283,7 @@
                       [disabled]="!TopicService.canEditDescription(topic)"
                       [ngClass]="{'disabled': !TopicService.canEditDescription(topic)}"></button>
                   </div>
-                  <div class="inline_notification error" *ngIf="errors?.image">
+                  <div class="inline_notification error" *ngIf="error?.image">
                     <div class="icon_notification">
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="24" height="24" rx="12" fill="#EF4025" />
@@ -292,7 +292,7 @@
                           fill="white" stroke="white" stroke-linecap="round" />
                       </svg>
                     </div>
-                    <div [innerHtml]="errors.image">
+                    <div [innerHtml]="error.image">
                     </div>
                   </div>
                   <div id="topic_image" class="block_section" *ngIf="(topic.imageUrl || tmpImageUrl)">

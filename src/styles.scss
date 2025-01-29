@@ -1239,7 +1239,7 @@ tour-item-template {
   transition: all 0.5s ease-in-out;
   gap: 16px;
   position: absolute;
-  width: 400px;
+  width: 560px;
   /* Shadow/Heavy */
   box-shadow: 0px 8px 20px 0px rgba(220, 231, 240, 0.3),
     0px 12px 16px 0px rgba(50, 85, 112, 0.1);
@@ -1293,6 +1293,8 @@ tour-item-template {
     justify-content: space-between;
     text-align: left;
     gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
 
     .title {
       font-size: 18px;
@@ -2026,6 +2028,10 @@ tour-item-template {
   &.active {
     bottom: 0;
     visibility: visible;
+  }
+
+  .btn_medium_close {
+    margin-left: auto;
   }
 
   .options {

@@ -35,6 +35,42 @@ export class TopicArgumentsComponent implements OnInit {
   orderByOptions = Object.keys(this.TopicArgumentService.ARGUMENT_ORDER_BY);
   focusArgumentSubject = false;
   filtersSelected = false;
+  mobileFiltersList = false;
+
+  filtersData = {
+    argumentType: {
+      isMobileOpen: false,
+      placeholder: "COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_TYPE",
+      selectedValue: [] as string[],
+      preSelectedValue: [] as string[],
+      items: [
+        ...Object.keys(this.TopicArgumentService.ARGUMENT_TYPES).filter(it => it !== this.TopicArgumentService.ARGUMENT_TYPES.reply).map((value) => {
+          return { title: `COMPONENTS.TOPIC_ARGUMENTS.FILTER_TYPE_${value}`, value }
+        }),
+      ]
+    },
+    orderBy: {
+      isMobileOpen: false,
+      placeholder: "COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER",
+      selectedValue: [] as string[],
+      preSelectedValue: [] as string[],
+      items: [
+        { title: 'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_DEFAULT', value: "default"},
+        ...Object.keys(this.TopicArgumentService.ARGUMENT_ORDER_BY).map((value) => {
+          return { title: `COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_${value}`, value }
+        }),
+      ]
+    },
+  };
+
+  get filterKeys() {
+    return Object.keys(this.filtersData) as Array<keyof typeof this.filtersData>;
+  }
+
+  get hasMobileOpen() {
+    return Object.values(this.filtersData).some((filter) => filter.isMobileOpen);
+  }
+
   constructor(
     private readonly Auth: AuthService,
     public TopicService: TopicService,
@@ -125,6 +161,75 @@ export class TopicArgumentsComponent implements OnInit {
   }
   getArgumentPercentage(count: number) {
     return count / (this.TopicArgumentService.count.value.pro + this.TopicArgumentService.count.value.con) * 100 || 0;
+  }
+
+  hasActiveFilterValue(key: keyof typeof this.filtersData, val: string) {
+    return this.filtersData[key].selectedValue.find((item) => item === val) !== undefined;
+  }
+
+  getActiveFilterText(key: keyof typeof this.filtersData, val: string) {
+    const value = val === '' ? 'all' : val;
+    return this.filtersData[key].items.find((item) => item.value === value)!.title;
+  }
+
+  chooseFilterValue(filter: keyof typeof this.filtersData, value: string) {
+    switch (filter) {
+      case 'argumentType':
+        const types = this.filtersData.argumentType.preSelectedValue.includes(value)
+          ? this.filtersData.argumentType.preSelectedValue.filter((item) => item !== value)
+          : this.filtersData.argumentType.preSelectedValue.concat([value]);
+        this.filtersData.argumentType.preSelectedValue = types;
+        break;
+      case 'orderBy':
+        this.filtersData[filter].preSelectedValue = [value];
+        break;
+      default:
+    }
+  }
+
+  applyFilters(filter: keyof typeof this.filtersData) {
+    switch (filter) {
+      case 'argumentType':
+        this.filtersSelected = true;
+        this.TopicArgumentService.loadPage(1);
+        this.TopicArgumentService.setParam('types', this.filtersData.argumentType.preSelectedValue);
+        this.filtersData.argumentType.selectedValue = this.filtersData.argumentType.preSelectedValue;
+        break;
+      case 'orderBy':
+        const val = this.filtersData[filter].preSelectedValue[0] === 'default' ? null : this.filtersData[filter].preSelectedValue;
+        this.TopicArgumentService.setParam('orderBy', val)
+        this.filtersData[filter].selectedValue =this.filtersData[filter].preSelectedValue;
+        break;
+      default:
+    }
+  }
+
+  closeMobileFilter() {
+    const keys = this.filterKeys;
+
+    keys.forEach((key) => {
+      this.filtersData[key].isMobileOpen = false;
+    })
+  }
+
+  setFilterValue(filter: keyof typeof this.filtersData, value: string) {
+    switch (filter) {
+      case 'argumentType':
+        this.filtersSelected = true;
+        this.TopicArgumentService.loadPage(1);
+        const types = this.filtersData.argumentType.selectedValue.includes(value)
+          ? this.filtersData.argumentType.selectedValue.filter((item) => item !== value)
+          : this.filtersData.argumentType.selectedValue.concat([value]);
+        this.TopicArgumentService.setParam('types', types);
+        this.filtersData[filter].selectedValue = types;
+        break;
+      case 'orderBy':
+        const val = value === 'default' ? null : value;
+        this.TopicArgumentService.setParam('orderBy', val)
+        this.filtersData[filter].selectedValue = [value];
+        break;
+      default:
+    }
   }
 
   doAddArgument() {

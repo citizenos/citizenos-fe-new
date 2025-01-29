@@ -7,9 +7,8 @@ import { DIALOG_DATA, DialogRef, DialogService } from 'src/app/shared/dialog';
 import { take, combineLatest, Observable, switchMap, map, tap } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 import { IdeaboxComponent } from '../ideabox/ideabox.component';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 import { ConfigService } from '@services/config.service';
-import { LocationService } from '@services/location.service';
-import { NotificationService } from '@services/notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Argument } from 'src/app/interfaces/argument';
 import { TopicService } from '@services/topic.service';
@@ -80,13 +79,12 @@ export class IdeaDialogComponent extends IdeaboxComponent {
     config: ConfigService,
     router: Router,
     Auth: AuthService,
-    Location: LocationService,
-    Notification: NotificationService,
+    TopicMemberUserService: TopicMemberUserService,
     Translate: TranslateService,
     TopicService: TopicService,
     TopicIdeaService: TopicIdeaService
   ) {
-    super(dialog, config, router, Auth, Location, Notification, Translate, TopicService, TopicIdeaService);
+    super(dialog, config, router, Auth, TopicMemberUserService, Translate, TopicService, TopicIdeaService);
     this.idea = this.data.idea;
     this.topic = this.data.topic;
     this.ideation = this.data.ideation;

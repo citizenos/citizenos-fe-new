@@ -31,12 +31,10 @@ import { Language } from 'src/app/interfaces/language';
 })
 export class TopicsComponent implements OnInit {
 
-  //mew
   moreFilters = false;
   searchInput = '';
   searchString$ = new BehaviorSubject('');
   topics$ = of(<Topic[] | any[]>[]);
-  //new
   public FILTERS_ALL = 'all';
   countrySearch = '';
   countrySearch$ = new BehaviorSubject('');
@@ -51,32 +49,82 @@ export class TopicsComponent implements OnInit {
     return a.name.localeCompare(b.name);
   });
   languages$ = of(<Language[]>[]);
-  topicFilters = {
-    category: '',
-    orderBy: '',
-    status: '',
-    country: '',
-    language: ''
-  };
   statusFilter$ = new BehaviorSubject('');
   orderFilter$ = new BehaviorSubject('');
   categoryFilter$ = new BehaviorSubject('');
   countryFilter$ = new BehaviorSubject('');
   languageFilter$ = new BehaviorSubject('');
 
-  mobileFilters: any = {
-    category: false,
-    status: false,
-    orderBy: '',
-    country: false,
-    language: false,
-  }
   mobileFiltersList = false;
-  categories$ = Object.keys(this.Topic.CATEGORIES);
 
-  statuses$ = Object.keys(this.Topic.STATUSES);
   allTopics$: Topic[] = [];
   destroy$ = new Subject<boolean>();
+
+  filtersData = {
+    status: {
+      isMobileOpen: false,
+      placeholder: "COMPONENTS.PUBLIC_TOPICS.FILTER_STATUS",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'TXT_TOPIC_STATUS_ALL', value: "all"},
+        { title: 'COMPONENTS.PUBLIC_TOPICS.FILTER_TOPICS_MODERATED', value: "showModerated"},
+        ...Object.keys(this.Topic.STATUSES).map((status) => {
+          return { title: `TXT_TOPIC_STATUS_${status}`, value: status }
+        }),
+      ]
+    },
+    category: {
+      isMobileOpen: false,
+      placeholder: "COMPONENTS.PUBLIC_TOPICS.FILTER_CATEGORIES",
+      selectedValue: "",
+      preSelectedValue: "",
+      items: [
+        { title: 'TXT_TOPIC_CATEGORY_ALL', value: "all"},
+        ...Object.keys(this.Topic.CATEGORIES).map((cat) => {
+          return { title: `TXT_TOPIC_CATEGORY_${cat}`, value: cat }
+        }),
+      ]
+    },
+    country: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_COUNTRY",
+      selectedValue: "",
+      preSelectedValue: "",
+      /**
+       * @note Only for desktop. For mobile it looks for observable.
+       */
+      items: [
+        { title: 'VIEWS.MY_TOPICS.FILTER_ALL', value: "all"},
+        ...this.countries.map((it) => {
+          return { title: it.name, value: it.name }
+        }),
+      ]
+    },
+    language: {
+      isMobileOpen: false,
+      placeholder: "VIEWS.MY_TOPICS.FILTER_LANGUAGE",
+      selectedValue: "",
+      preSelectedValue: "",
+      /**
+       * @note Only for desktop. For mobile it looks for observable.
+       */
+      items: [
+        { title: 'VIEWS.MY_GROUPS.FILTER_ALL', value: "all"},
+        ...this.languages.map((it) => {
+          return { title: it.name, value: it.name }
+        }),
+      ]
+    },
+  };
+
+  get filterKeys() {
+    return Object.keys(this.filtersData) as Array<keyof typeof this.filtersData>;
+  }
+
+  get hasMobileOpen() {
+    return Object.values(this.filtersData).some((filter) => filter.isMobileOpen);
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -174,42 +222,6 @@ export class TopicsComponent implements OnInit {
     return element.id;
   }
 
-  orderBy(orderBy: string) {
-    if (orderBy === 'all' || typeof orderBy !== 'string') orderBy = '';
-    this.orderFilter$.next(orderBy);
-    this.topicFilters.orderBy = orderBy;
-  }
-
-  setStatus(status: string) {
-    if (status === 'all'|| typeof status !== 'string') status = '';
-    this.statusFilter$.next(status);
-    this.topicFilters.status = status;
-  }
-
-  setCategory(category: string) {
-    if (category === 'all' || typeof category !== 'string') category = '';
-    this.categoryFilter$.next(category);
-    this.topicFilters.category = category;
-  }
-
-  setCountry(country: string) {
-    if (country === 'all' || typeof country !== 'string') country = '';
-    this.countryFilter$.next(country);
-    this.topicFilters.country = country;
-
-    this.countrySearch$.next(country);
-    this.countrySearch = country;
-  }
-
-  setLanguage(language: string) {
-    if (language === 'all' || typeof language !== 'string') language = '';
-    this.languageFilter$.next(language);
-    this.topicFilters.language = language;
-
-    this.languageSearch$.next(language);
-    this.languageSearch = language;
-  }
-
   ngOnInit(): void {
   }
 
@@ -219,48 +231,65 @@ export class TopicsComponent implements OnInit {
   }
 
   closeMobileFilter() {
-    const filtersShow = Object.entries(this.mobileFilters).find(([key, value]) => {
-      return !!value;
+    const keys = this.filterKeys;
+
+    keys.forEach((key) => {
+      this.filtersData[key].isMobileOpen = false;
+      this.filtersData[key].preSelectedValue = "";
+      switch(key) {
+        case "language": {
+          this.languageSearch$.next(this.languageSearch);
+          break;
+        }
+        case "country": {
+          this.countrySearch$.next(this.countrySearch);
+          break;
+        }
+        default:
+      }
     })
-    if (filtersShow) {
-      const filterName = filtersShow[0]
-      this.mobileFilters[filterName] = false;
-      if (filterName === 'language') {
-        this.languageSearch$.next(this.languageSearch);
-      }
-      if (filterName === 'country') {
-        this.countrySearch$.next(this.countrySearch);
-      }
-    }
   }
 
-  showMobileOverlay() {
-    const filtersShow = Object.entries(this.mobileFilters).find(([key, value]) => {
-      return !!value;
-    })
-    if (filtersShow) return true;
+  getActiveFilterText(key: keyof typeof this.filtersData, val: string) {
+    const value = val === '' ? 'all' : val;
+    return this.filtersData[key].items.find((item) => item.value === value)!.title;
+  }
 
-    return false;
+  chooseFilterValue (type: keyof typeof this.filtersData, option: string) {
+    this.filtersData[type].preSelectedValue = option;
+  }
+
+  setFilterValue(filter: keyof typeof this.filtersData, val: string) {
+    const value = val === 'all' ? '' : val;
+    switch (filter) {
+      case 'status':
+        this.statusFilter$.next(value);
+        break;
+      case 'category':
+        this.categoryFilter$.next(value);
+        break;
+      case 'country':
+        this.countryFilter$.next(value);
+        break;
+      case 'language':
+        this.languageFilter$.next(value);
+        break;
+      default:
+    }
+
+    this.filtersData[filter].selectedValue = value;
   }
 
   doClearFilters() {
-    this.setStatus('');
-    this.setCategory('');
-    this.setCountry('');
-    this.setLanguage('');
-    this.searchInput = '';
-    this.doSearch('');
+    const keys = this.filterKeys;
+    keys.forEach((key) => {
+      this.setFilterValue(key, '');
+    })
   }
 
   ngOnDestroy(): void {
     this.destroy$.next(true);
   }
-
-  isFilterApplied() {
-    return this.topicFilters.category !== this.FILTERS_ALL || this.topicFilters.status !== this.FILTERS_ALL || this.topicFilters.country !== '' || this.topicFilters.country !== '';
-  };
-
-  //mew
 
   doSearch(search: string) {
     this.searchString$.next(search);

@@ -694,7 +694,13 @@ export class ActivityService extends ItemsListService {
       state = state.concat(['topics', origin.id]);
     }
 
-    if (state.length) {
+    /**
+     * @note Assume that the first item is always present and is lang param.
+     * No action needed in this case.
+     * 
+     * @fix https://github.com/citizenos/citizenos-fe/issues/1737
+     */
+    if (state.length > 1) {
       if (hash) {
         params.fragment = hash;
       }

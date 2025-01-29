@@ -39,12 +39,23 @@ export class HelpComponent implements OnInit {
   ) {
     this.app.showHelp.pipe(tap((show) => {
       const url = this.router.url;
+      const tourName = this.getTourName();
       this.showTourBox = false;
-      if (window.innerWidth <= 1024 && show && url.indexOf('/topics/') > -1 && url.indexOf('/create/') === -1 && url.indexOf('/edit/') === -1) {
+      if (show && (tourName) && url.indexOf('/create/') === -1 && url.indexOf('/edit/') === -1) {
         this.showTourBox = true;
       }
-
     })).subscribe();
+  }
+
+  private getTourName() {
+    const url = this.router.url;
+    if (url.indexOf('/dashboard') > -1) {
+      return "dashboard"
+    } else if (url.indexOf('/topics/') > -1) {
+      return "topic"
+    } else {
+      return null
+    }
   }
 
   ngOnInit(): void {
@@ -80,10 +91,16 @@ export class HelpComponent implements OnInit {
   startTour() {
     this.toggleHelp();
     window.scrollTo(0, 0);
-    if (window.innerWidth > 560) {
-      return this.TourService.show('topic_tablet', 1);
+    const tourName = this.getTourName();
+    if (tourName) {
+      if (window.innerWidth > 1024) {
+        return this.TourService.show(tourName, 1);
+      }
+      if (window.innerWidth > 560) {
+        return this.TourService.show(`${tourName}_tablet`, 1);
+      }
+      this.TourService.show(`${tourName}_mobile`, 1);
     }
-    this.TourService.show('topic_mobile', 1);
   }
 
   sendHelpRequest() {

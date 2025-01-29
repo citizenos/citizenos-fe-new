@@ -53,12 +53,41 @@
 
     .options_row {
       display: flex;
+      flex-wrap: wrap;
       gap: 16px;
       width: 100%;
       position: relative;
 
+      @include mixins.desktop {
+        &.open {
+          .dropdown_input:nth-of-type(n+5), 
+          .input_area {
+            display: flex;
+          }
+        }
+  
+        &.closed {
+          .dropdown_input:nth-of-type(n+5),
+          .input_area {
+            display: none;
+          }
+        }
+      }
+    
       @include mixins.tablet {
-        flex-flow: row wrap;
+        &.open {
+          .dropdown_input:nth-of-type(n+3), 
+          .input_area {
+            display: flex;
+          }
+        }
+  
+        &.closed {
+          .dropdown_input:nth-of-type(n+3),
+          .input_area {
+            display: none;
+          }
+        }
       }
 
       .dropdown_input {

@@ -2,12 +2,10 @@ import { TopicService } from '@services/topic.service';
 import { AfterViewInit, Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, exhaustMap, map, of, shareReplay, switchMap, take } from 'rxjs';
+import { take } from 'rxjs';
 import { Idea } from 'src/app/interfaces/idea';
 import { AuthService } from '@services/auth.service';
 import { ConfigService } from '@services/config.service';
-import { LocationService } from '@services/location.service';
-import { NotificationService } from '@services/notification.service';
 import { TopicIdeaService } from '@services/topic-idea.service';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { DialogService } from 'src/app/shared/dialog';
@@ -17,6 +15,7 @@ import { IdeaReportReasonComponent } from '../idea-report-reason/idea-report-rea
 import { Topic } from 'src/app/interfaces/topic';
 import { Ideation } from 'src/app/interfaces/ideation';
 import { IdeaReactionsComponent } from '../idea-reactions/idea-reactions.component';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 
 @Component({
   selector: 'ideabox',
@@ -38,14 +37,12 @@ export class IdeaboxComponent implements AfterViewInit {
   isReply = false;
   errors = [];
   wWidth = window.innerWidth;
-  private loadVotes$ = new BehaviorSubject<void>(undefined);
   constructor(
     public dialog: DialogService,
     public config: ConfigService,
     public router: Router,
     public Auth: AuthService,
-    private Location: LocationService,
-    private Notification: NotificationService,
+    private readonly TopicMemberUserService: TopicMemberUserService,
     public Translate: TranslateService,
     public TopicService: TopicService,
     public TopicIdeaService: TopicIdeaService
@@ -93,9 +90,6 @@ export class IdeaboxComponent implements AfterViewInit {
     this.showDeletedIdea = value;
   }
   ideaEditMode() {
-    /* this.editSubject = this.argument.subject;
-     this.editText = this.argument.text;
-     this.editType = this.argument.type;*/
     if (this.showEdit) { // Visible, so we gonna hide, need to clear form errors
       this.errors = [];
     }
@@ -106,7 +100,7 @@ export class IdeaboxComponent implements AfterViewInit {
     this.ideaEditMode();
   }
   doShowDeleteIdea() {
-    const deleteArgument = this.dialog.open(ConfirmDialogComponent, {
+    const deleteIdea = this.dialog.open(ConfirmDialogComponent, {
       data: {
         level: 'delete',
         heading: 'MODALS.TOPIC_DELETE_IDEA_TITLE',
@@ -117,9 +111,9 @@ export class IdeaboxComponent implements AfterViewInit {
       }
     });
 
-    deleteArgument.afterClosed().subscribe((confirm) => {
+    deleteIdea.afterClosed().subscribe((confirm) => {
       if (confirm === true) {
-        const idea = Object.assign({ topicId: this.topic.id, ideaId: this.idea.id, ideationId: this.ideation.id });
+        const idea = { topicId: this.topic.id, ideaId: this.idea.id, ideationId: this.ideation.id };
         this.TopicIdeaService
           .delete(idea)
           .pipe(take(1))
@@ -161,6 +155,7 @@ export class IdeaboxComponent implements AfterViewInit {
       .pipe(take(1))
       .subscribe((voteResult) => {
         this.idea.votes = voteResult;
+        this.TopicMemberUserService.reload();
       });
   };
 
@@ -180,7 +175,7 @@ export class IdeaboxComponent implements AfterViewInit {
   }
 
   addToFolder() {
-    const addToFolderDialog = this.dialog.open(AddIdeaFolderComponent, {
+    this.dialog.open(AddIdeaFolderComponent, {
       data: {
         topicId: this.topic.id,
         ideationId: this.ideation.id,

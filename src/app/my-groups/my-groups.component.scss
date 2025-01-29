@@ -48,17 +48,46 @@
 
     .options_row {
       display: flex;
+      flex-wrap: wrap;
       gap: 16px;
       width: 100%;
       position: relative;
 
+      @include mixins.desktop {
+        &.open {
+          .dropdown_input:nth-of-type(n+4), 
+          .input_area {
+            display: flex;
+          }
+        }
+  
+        &.closed {
+          .dropdown_input:nth-of-type(n+4),
+          .input_area {
+            display: none;
+          }
+        }
+      }
+
       @include mixins.tablet {
-        flex-flow: row wrap;
+        &.open {
+          .dropdown_input:nth-of-type(n+3), 
+          .input_area {
+            display: flex;
+          }
+        }
+  
+        &.closed {
+          .dropdown_input:nth-of-type(n+3),
+          .input_area {
+            display: none;
+          }
+        }
       }
 
       .dropdown_input {
         flex-grow: 1;
-        min-width: calc(25% - 12px);
+        min-width: calc(100% / 3 - 12px);
 
         @include mixins.tablet {
           min-width: calc(50% - 12px);
@@ -145,14 +174,5 @@
 
   @include mixins.tablet {
     background-color: rgba(44, 59, 71, 0.8);
-  }
-}
-
-.dropdown {
-  @include mixins.dropdown-style;
-  min-width: 160px;
-
-  @include mixins.mobile {
-    width: calc(100% - 40px);
   }
 }

@@ -129,107 +129,122 @@
               </div>
             </div>
           </div>
+
           <div class="arguments_filters">
             <ng-container *ngIf=" wWidth <= 550">
-              <div class="mobile_filters" mobileFilters>
-                <div class="selector">
-                  <span translate="COMPONENTS.TOPIC_ARGUMENTS.BTN_FILTERS"></span>
-                  <button>
-                    <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
+              <div class="dropdown mobile_filters_selection mobile_show" [ngClass]="{'dropdown_active': mobileFiltersList}">
+                <div class="selection" (click)="mobileFiltersList= !mobileFiltersList">
+                  <div class="selected_item" [innerHtml]="'VIEWS.MY_TOPICS.LBL_FILTER' | translate | titlecase"></div>
+                  <button class="btn_medium_plain icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M17 10L12 15L7 10" stroke="#2C3B47" stroke-width="2" stroke-linecap="round" />
-                    </svg>
-                    <svg class="icon_active" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path d="M17 15L12 10L7 15" stroke="#2C3B47" stroke-width="2" stroke-linecap="round" />
                     </svg>
                   </button>
                 </div>
-                <div class="filter_items">
-                  <div class="filter" mobileFilter>
-                    <span translate="COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_TYPE"></span>
-                    <a translate="COMPONENTS.TOPIC_ARGUMENTS.FILTER_TYPE_ALL"></a>
-                    <div class="filter_options">
-                      <div class="option check" *ngFor="let item of argumentTypes">
-                        <label class="checkbox" *ngIf="item.type !== 'reply'">
-                          <span [translate]="'COMPONENTS.TOPIC_ARGUMENTS.FILTER_TYPE_'+ item.type.toUpperCase()"></span>
-                          <input type="checkbox" [(ngModel)]="item.checked" (ngModelChange)="filterArguments();">
-                          <span class="checkmark"></span>
-                        </label>
-                      </div>
-                      <button class="btn_medium_secondary bold filter_apply_btn" translate="BTN_APPLY">
-
-                      </button>
-                    </div>
-                  </div>
-                  <div class="filter" mobileFilter>
-                    <span translate="COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER"></span>
-                    <a
-                      [translate]="'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_' +
-            (TopicArgumentService.params$.value.orderBy? TopicArgumentService.params$.value.orderBy : 'DEFAULT') | uppercase"></a>
-                    <div class="filter_options">
-                      <a class="option filter_apply_btn"
-                        translate="COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_DEFAULT"
-                        (click)="TopicArgumentService.setParam('orderBy', null)"> </a>
-                      <a class="option filter_apply_btn" *ngFor="let orderOption of orderByOptions"
-                        (click)="TopicArgumentService.setParam('orderBy', orderOption)">
-                        {{'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_' + orderOption | uppercase | translate}}
-                      </a>
-                    </div>
-                  </div>
+                <div class="options filter_options">
+                  <ng-container *ngFor="let filterKey of filterKeys">
+                    <a class="filter_option" (click)="filtersData[filterKey].isMobileOpen= true">
+                      <span class="filter_option_text">{{ filtersData[filterKey].placeholder| translate }}</span>
+                      <span *ngIf="filtersData[filterKey].selectedValue.length === 1; else noSelection">
+                        {{ getActiveFilterText(filterKey, filtersData[filterKey].selectedValue[0]) | uppercase | translate }}
+                      </span>
+                      <ng-template #noSelection>
+                        {{ filtersData[filterKey].placeholder | translate }}
+                      </ng-template>
+                    </a>
+                  </ng-container>
                 </div>
               </div>
+          
+              <div class="overlay" *ngIf="hasMobileOpen" (click)="closeMobileFilter()"></div>
+          
+              <div class="mobile_filters_wrap" [ngClass]="{'active': hasMobileOpen}">
+                <ng-container *ngFor="let filterKey of filterKeys">
+                  <div class="options button_options" *ngIf="filtersData[filterKey].isMobileOpen">
+                    <a class="btn_medium_close icon" (click)="closeMobileFilter()">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.5858 12L5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L12 13.4142L17.2929 18.7071C17.6834 19.0976 18.3166 19.0976 18.7071 18.7071C19.0976 18.3166 19.0976 17.6834 18.7071 17.2929L13.4142 12L18.7071 6.70711C19.0976 6.31658 19.0976 5.68342 18.7071 5.29289C18.3166 4.90237 17.6834 4.90237 17.2929 5.29289L12 10.5858L6.70711 5.29289Z"
+                          fill="#2C3B47" />
+                      </svg>
+                    </a>
+          
+                    <div class="options_wrapper">
+                      <ng-container *ngFor="let option of filtersData[filterKey].items">
+                        <label class="checkbox">
+                          <span>{{ option.title | uppercase | translate }}</span>
+                          <input
+                            type="checkbox"
+                            [checked]="hasActiveFilterValue(filterKey, option.value)"
+                            name="{{filterKey}}"
+                            (change)="chooseFilterValue(filterKey, option.value)"
+                            *ngIf="filterKey === 'argumentType'; else orderSelectInput"
+                          >
+                          <ng-template #orderSelectInput>
+                            <input
+                              type="radio"
+                              name="{{filterKey}}"
+                              (change)="chooseFilterValue(filterKey, option.value)"
+                              [checked]="hasActiveFilterValue(filterKey, option.value)"
+                            >
+                          </ng-template>
+                          <span class="checkmark"></span>
+                        </label>
+                      </ng-container>
+                    </div>
+            
+                    <button class="btn_medium_secondary" (click)="applyFilters(filterKey); closeMobileFilter();"
+                      translate="VIEWS.MY_TOPICS.BTN_APPLY"></button>
+                  </div>
+                </ng-container>
+              </div>
             </ng-container>
+
             <ng-container *ngIf=" wWidth > 550">
-              <cos-input [placeholder]="'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_TYPE' | translate"
-                class="dropdown_input">
-                <div class="dropdown" [cosDropdown] [multipleChoice]="true">
-                  <div class="selection">
-                    <div class="selected_item">{{'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_TYPE' | translate}}</div>
-                    <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17 10L12 15L7 10" stroke="#2C3B47" stroke-width="2" stroke-linecap="round" />
-                      </svg>
+              <ng-container *ngFor="let filterKey of filterKeys">
+                <cos-input [placeholder]="filtersData[filterKey].placeholder| translate" class="dropdown_input">
+                  <div class="dropdown" [cosDropdown] [multipleChoice]="filterKey === 'argumentType'">
+                    <div class="selection">
+                      <div class="selected_item">
+                        <span *ngIf="filtersData[filterKey].selectedValue.length === 1; else noSelection">
+                          {{ getActiveFilterText(filterKey, filtersData[filterKey].selectedValue[0]) | uppercase | translate }}
+                        </span>
+                        <ng-template #noSelection>
+                          {{ filtersData[filterKey].placeholder | translate }}
+                        </ng-template>
+                      </div>
+                      <div>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M17 10L12 15L7 10" stroke="#2C3B47" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="options">
+                      <ng-container *ngIf="filterKey === 'argumentType'; else orderSelectOptions">
+                        <div class="option check" *ngFor="let option of filtersData[filterKey].items">
+                          <label class="checkbox">
+                            <span>{{ option.title | uppercase | translate }}</span>
+                            <input type="checkbox" [checked]="hasActiveFilterValue(filterKey, option.value)" (change)="setFilterValue(filterKey, option.value);">
+                            <span class="checkmark"></span>
+                          </label>
+                        </div>
+                      </ng-container>
+                      <ng-template #orderSelectOptions>
+                        <div
+                          class="option"
+                          (click)="setFilterValue('orderBy', option.value)"
+                          (keypress)="setFilterValue('orderBy', option.value)"
+                          *ngFor="let option of filtersData[filterKey].items">
+                          {{ option.title | uppercase | translate }}
+                        </div>
+                      </ng-template>
                     </div>
                   </div>
-                  <div class="options">
-                    <div class="option check" *ngFor="let item of argumentTypes">
-                      <label class="checkbox" *ngIf="item.type !== 'reply'">
-                        <span [translate]="'COMPONENTS.TOPIC_ARGUMENTS.FILTER_TYPE_'+ item.type.toUpperCase()"></span>
-                        <input type="checkbox" [(ngModel)]="item.checked" (change)="filterArguments();">
-                        <span class="checkmark"></span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </cos-input>
-              <cos-input [placeholder]="'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER' | translate"
-                class="dropdown_input">
-                <div class="dropdown" [cosDropdown]>
-                  <div class="selection">
-                    <div class="selected_item">{{'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_' +
-                      (TopicArgumentService.params$.value.orderBy? TopicArgumentService.params$.value.orderBy :
-                      'DEFAULT')
-                      |
-                      uppercase
-                      | translate}}</div>
-                    <div><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M17 10L12 15L7 10" stroke="#2C3B47" stroke-width="2" stroke-linecap="round" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="options">
-                    <div class="option" translate="COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_DEFAULT"
-                      (click)="TopicArgumentService.setParam('orderBy', null)" (keypress)="TopicArgumentService.setParam('orderBy', null)"> </div>
-                    <div class="option" *ngFor="let orderOption of orderByOptions"
-                      (click)="TopicArgumentService.setParam('orderBy', orderOption)"
-                      (keypress)="TopicArgumentService.setParam('orderBy', orderOption)">
-                      {{'COMPONENTS.TOPIC_ARGUMENTS.FILTER_ARGUMENT_ORDER_BY_' + orderOption | uppercase | translate}}
-                    </div>
-                  </div>
-                </div>
-              </cos-input>
+                </cos-input>
+              </ng-container>
             </ng-container>
           </div>
+
           <div id="arguments">
             <argument [argument]="arg" [canReply]="!hasDiscussionEndedExpired(discussion)" [showReplies]="arg.showReplies" [topicId]="topic.id" *ngFor="let arg of arguments"></argument>
           </div>

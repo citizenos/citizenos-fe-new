@@ -395,7 +395,9 @@
           <ng-container *ngIf="tabSelected === 'ideation' || tabTablet === 'ideation'">
             <div class="ideation_wrap" #topicIdeation [ngClass]="(tabTablet==='ideation')? 'show': ''">
               <ng-container *ngIf="topic?.ideationId && (ideation$ | async) as ideation">
-                <topic-ideation [ngClass]="(tabTablet === 'voting')? 'show': ''" [topic]="topic"
+                <topic-ideation
+                  [ngClass]="(tabTablet === 'voting')? 'show': ''" [topic]="topic"
+                  [TourItem]="{tourid: 'topic', index: 7, position: 'top'}"
                   [ideation]="ideation"></topic-ideation>
               </ng-container>
             </div>
@@ -406,10 +408,13 @@
               [ngClass]="(tabTablet==='discussion')? 'show': ''"
               [TourItem]="{tourid: 'topic', index: 7, position: 'top'}"></topic-arguments>
           </ng-container>
+
           <ng-container *ngIf="tabSelected === 'voting'">
             <div class="vote_wrap" #topicVote>
               <div class="topic_feature_section voting" *ngIf="!topic.voteId"
-                [ngClass]="(tabTablet === 'voting')? 'show': ''">
+                [ngClass]="(tabTablet === 'voting')? 'show': ''"
+                [TourItem]="{tourid: 'topic', index: 7, position: 'top'}"
+              >
                 <ng-container *ngIf="!topic.voteId">
                   <div class="no_feature_yet">
                     <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -486,18 +491,24 @@
                   </div>
                 </ng-container>
               </div>
+
               <ng-container *ngIf="topic?.voteId && (vote$ | async) as vote">
                 <topic-vote-cast [ngClass]="(tabTablet === 'voting')? 'show': ''" [topic]="topic"
+                  [TourItem]="{tourid: 'topic', index: 7, position: 'top'}"
                   [vote]="vote"></topic-vote-cast>
               </ng-container>
             </div>
           </ng-container>
+
           <ng-container *ngIf="tabSelected === 'followUp'">
             <div class="follow_up_wrap" #topicFollowUp>
               <ng-container *ngIf="events$ | async as events;">
                 <ng-container
                   *ngIf="events.length === 0 && (!canUpdate(topic) || topic.status !== TopicService.STATUSES.followUp)">
-                  <div class="topic_feature_section follow_up" [ngClass]="(tabTablet === 'followUp')? 'show': ''">
+                  <div
+                    class="topic_feature_section follow_up" [ngClass]="(tabTablet === 'followUp')? 'show': ''"
+                    [TourItem]="{tourid: 'topic', index: 7, position: 'top'}"
+                  >
                     <div class="no_feature_yet">
                       <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_7696_17198)">

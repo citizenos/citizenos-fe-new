@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class TopicService {
-  public CATEGORIES = <any>{
+  public CATEGORIES = {
     agriculture: "agriculture",
     animal_protection: "animal_protection",
     arts: "arts",
@@ -46,7 +46,7 @@ export class TopicService {
     youth: "youth",
   };
 
-  public STATUSES = <any>{
+  public STATUSES = {
     draft: 'draft',
     ideation: 'ideation',
     inProgress: 'inProgress', // Being worked on
@@ -228,7 +228,7 @@ export class TopicService {
     return (topic?.permission && topic.permission.level === this.LEVELS.admin && topic.status !== this.STATUSES.closed);
   };
 
-  changeState(topic: Topic, state: string, stateSuccess?: string) {
+  changeState(topic: Topic, state: keyof typeof this.STATUSES, stateSuccess?: string) {
     const templates = <any>{
       closed: {
         level: 'delete',
@@ -261,7 +261,7 @@ export class TopicService {
           }).pipe(take(1))
             .subscribe({
               next: () => {
-                if (state === 'vote' && !topic.voteId && !topic.vote) {
+                if (state === 'voting' && !topic.voteId && !topic.vote) {
                   this.router.navigate(['/topics', topic.id, 'votes', 'create'])
                 }
                 this.reloadTopic();
@@ -283,7 +283,7 @@ export class TopicService {
       }).pipe(take(1))
         .subscribe({
           next: () => {
-            if (state === 'vote' && !topic.voteId && !topic.vote) {
+            if (state === 'voting' && !topic.voteId && !topic.vote) {
               this.router.navigate(['/topics', topic.id, 'votes', 'create'])
             }
             this.reloadTopic();

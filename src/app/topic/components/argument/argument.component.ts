@@ -2,7 +2,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, Input, OnInit, ViewChild, ViewEncapsulation, ElementRef } from '@angular/core';
 import { DialogService } from 'src/app/shared/dialog';
 import { take } from 'rxjs';
-import { Router } from '@angular/router';
 import { Argument } from 'src/app/interfaces/argument';
 import { AuthService } from '@services/auth.service';
 import { ConfigService } from '@services/config.service';
@@ -12,6 +11,7 @@ import { NotificationService } from '@services/notification.service';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 import { ArgumentReactionsComponent } from '../argument-reactions/argument-reactions.component';
 import { ArgumentReportComponent } from '../argument-report/argument-report.component';
+import { TopicMemberUserService } from '@services/topic-member-user.service';
 @Component({
   selector: 'argument',
   templateUrl: './argument.component.html',
@@ -38,12 +38,12 @@ export class ArgumentComponent implements OnInit {
   constructor(
     public dialog: DialogService,
     public config: ConfigService,
-    private router: Router,
     public Auth: AuthService,
-    private Location: LocationService,
-    private Notification: NotificationService,
-    private Translate: TranslateService,
-    public TopicArgumentService: TopicArgumentService
+    private readonly Location: LocationService,
+    private readonly Notification: NotificationService,
+    private readonly Translate: TranslateService,
+    private readonly TopicMemberUserService: TopicMemberUserService,
+    public readonly TopicArgumentService: TopicArgumentService
   ) {
   }
 
@@ -88,9 +88,6 @@ export class ArgumentComponent implements OnInit {
     this.showDeletedArgument = value;
   }
   argumentEditMode() {
-    /* this.editSubject = this.argument.subject;
-     this.editText = this.argument.text;
-     this.editType = this.argument.type;*/
     if (this.showEdit) { // Visible, so we gonna hide, need to clear form errors
       this.errors = [];
     }
@@ -114,7 +111,7 @@ export class ArgumentComponent implements OnInit {
 
     deleteArgument.afterClosed().subscribe((confirm) => {
       if (confirm === true) {
-        const argument = Object.assign({ topicId: this.topicId }, this.argument);
+        const argument = { topicId: this.topicId, ...this.argument};
         this.TopicArgumentService
           .delete(argument)
           .pipe(take(1))
@@ -169,6 +166,7 @@ export class ArgumentComponent implements OnInit {
       .pipe(take(1))
       .subscribe((voteResult) => {
         this.argument.votes = voteResult;
+        this.TopicMemberUserService.reload();
       });
   };
 
@@ -200,7 +198,6 @@ export class ArgumentComponent implements OnInit {
     }
 
     const argumentIdWithVersion = this.TopicArgumentService.getArgumentIdWithVersion(reply.parent.id, reply.parent.version);
-    /*this.router.navigate([], {queryParams: {argumentId: argumentIdWithVersion}});*/
     let commentElement: HTMLElement | null = document.getElementById(argumentIdWithVersion);
     // The referenced comment was found on the page displayed
     if (commentElement) {

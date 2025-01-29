@@ -86,9 +86,9 @@
     "ERROR_INVALID_EMAIL": "@:MSG_ERROR_POST_API_AUTH_SIGNUP_40000_EMAIL",
     "ERROR_INVALID_MESSAEG": "Отсутствует текст сообщения.",
     "MSG_REQUEST_SENT": "Ваш запрос на помощь был отправлен!",
-    "EXTRA_INFO_TOUR_HEADING": "Страница, на которой вы находитесь, предлагает пошаговое руководство",
-    "EXTRA_INFO_TOUR_DESCRIPTION": "Это пошаговое руководство поможет вам освоить основные функции и действия на странице.",
-    "EXTRA_INFO_TOUR_BTN_START": "Начать пошаговое руководство"
+    "EXTRA_INFO_TOUR_HEADING": "The page you’re on offers a walkthrough tour",
+    "EXTRA_INFO_TOUR_DESCRIPTION": "The tour will guide you through the main features and things to do on the page.",
+    "EXTRA_INFO_TOUR_BTN_START": "Start tour"
   },
   "COMPONENTS": {
     "ACCESSIBILITY": {
@@ -635,7 +635,7 @@
       "DESCRIPTION": "Поскольку это ваше первое посещение обновленной панели управления Citizen OS, мы рекомендуем вам пройти пошаговое руководство, чтобы ознакомиться с платформой.",
       "TAKE_A_TOUR": "Прохождение займет всего пару минут.",
       "BTN_SUBMIT": "Пройти тур",
-      "BTN_CANCEL": "Пропустить"
+      "BTN_CANCEL": "Close"
     },
     "PASSWORD_FORGOT": {
       "PLACEHOLDER_EMAIL": "@:COMPONENTS.LOGIN_FORM.LOGIN_PLACEHOLDER_EMAIL",
@@ -791,7 +791,7 @@
       "NO_FOLDERS_DESC": "Администраторы темы могут создавать папки для группировки идей, относящихся к одной категории."
     },
     "TOUR": {
-      "LNK_SKIP": "Пропустить",
+      "LNK_SKIP": "Close",
       "LNK_BACK": "Назад",
       "LNK_NEXT": "Далее",
       "LNK_FINISH": "Закончить",
