@@ -21,6 +21,7 @@ export class TopicMemberUserComponent implements OnInit {
   @Input() member?: TopicMemberUser | any;
   @Input() topic: Topic | any;
   @Input() fields?: any;
+  @Input() withEmail?: boolean = true;
 
   userLevels = Object.keys(this.TopicService.LEVELS)
   constructor(

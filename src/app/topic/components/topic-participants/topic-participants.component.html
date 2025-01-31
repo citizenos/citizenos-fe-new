@@ -105,7 +105,7 @@
                 </div>
                 <ng-container *ngFor="let user of memberUsers; index as i;">
                   <div class="row_list">
-                    <topic-member-user [member]="user" [topic]="topic"></topic-member-user>
+                    <topic-member-user [member]="user" [topic]="topic" [withEmail]="false"></topic-member-user>
                   </div>
                 </ng-container>
               </div>

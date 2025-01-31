@@ -9,7 +9,7 @@
   <div class="member_info">
     <div class="bold user_name">{{member.name}}</div>
     <div class="via">
-      <span *ngIf="member.email">
+      <span *ngIf="withEmail && member.email">
         {{member.email}}
       </span>
     </div>

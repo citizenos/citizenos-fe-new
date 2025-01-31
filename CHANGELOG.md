@@ -1,3 +1,6 @@
+## 2025-01-31 - v1.2.2
+  * Fix: Issue #1819 - TOPICS: Don't show topic admin email addresses
+
 ## 2025-01-29 - v1.2.2
   * Fix: Issue #307 - Add participants to public topics automatically when they engage (add idea, like, vote, etc)
   * Fix: Issue #1657 - GROUPS: Bugs in last edit and/or order of public topics displayed within public group
