@@ -10,7 +10,7 @@
       </div>
       <div class="member_name_wrap">
         <div class="bold" [innerHtml]="member.name"></div>
-        <div class="member_info">{{member.email}}</div>
+        <div class="member_info" *ngIf="member.email">{{member.email}}</div>
       </div>
     </div>
     <div class="line_separator mobile_show"></div>

@@ -1,6 +1,6 @@
 {
   "name": "citizenos-fe",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "scripts": {
     "dev": "node ./prebuild.js && ng serve --host",
     "ng": "ng",

@@ -1536,8 +1536,8 @@
           </div>
         </div>
         <ng-container *ngFor="let member of users$ | async">
-          <group-member-user [member]="member" [group]="group" *ngIf="!member.invite.id"></group-member-user>
-          <group-invite-user [user]="member" [group]="group" *ngIf="member.invite.id"></group-invite-user>
+          <group-member-user [member]="member" [group]="group" *ngIf="!member.invite?.id"></group-member-user>
+          <group-invite-user [user]="member" [group]="group" *ngIf="member.invite?.id"></group-invite-user>
         </ng-container>
       </div>
       <div class="filter_section">
