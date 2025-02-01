@@ -10,24 +10,39 @@
     <div class="dialog_header">
       <div class="header_with_icon">
         <div class="icon_notification">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <rect width="40" height="40" rx="20" fill="#1168A8" />
             <path
               d="M23 11.5292C23 12.926 21.9255 14.0583 20.6 14.0583C19.2745 14.0583 18 12.926 18 11.5292C18 10.1323 19.2745 9 20.6 9C21.9255 9 23 10.1323 23 11.5292Z"
-              fill="white" />
+              fill="white"
+            />
             <path
               d="M17.3359 16.5357L22.8319 15.8098L20.4295 27.7096C20.2591 28.5695 20.4991 29.0576 21.1591 29.0576C21.6247 29.0576 22.3255 28.8806 22.8055 28.4354L22.5943 29.4876C21.9055 30.3626 20.3863 31 19.0783 31C17.3911 31 16.6735 29.9327 17.1391 27.664L18.9103 18.8929C19.0639 18.1518 18.9247 17.8837 18.2191 17.7067L17.1391 17.4968L17.3359 16.5357Z"
-              fill="white" />
+              fill="white"
+            />
           </svg>
         </div>
         <h4 class="title" translate="COMPONENTS.TOPIC_JOIN.HEADING"></h4>
       </div>
       <div class="dialog_close">
         <a class="btn_dialog_close icon" dialog-close>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               d="M7.72152 6.29537C7.3277 5.90154 6.68919 5.90154 6.29537 6.29537C5.90154 6.68919 5.90154 7.3277 6.29537 7.72153L10.5738 12L6.29541 16.2785C5.90159 16.6723 5.90159 17.3108 6.29541 17.7046C6.68923 18.0985 7.32774 18.0985 7.72156 17.7046L12 13.4262L16.2784 17.7046C16.6723 18.0985 17.3108 18.0985 17.7046 17.7046C18.0984 17.3108 18.0984 16.6723 17.7046 16.2785L13.4262 12L17.7046 7.72153C18.0985 7.3277 18.0985 6.68919 17.7046 6.29537C17.3108 5.90154 16.6723 5.90154 16.2785 6.29537L12 10.5739L7.72152 6.29537Z"
-              fill="#2C3B47" />
+              fill="#2C3B47"
+            />
           </svg>
         </a>
       </div>
@@ -36,12 +51,23 @@
       <div class="dialog_info_wrap">
         <div class="dialog_info row">
           <div class="delete_info_button_wrap">
-            <div class="delete_info_text" translate="COMPONENTS.TOPIC_JOIN.MESSAGE_MAIN"></div>
+            <div
+              class="delete_info_text"
+              translate="COMPONENTS.TOPIC_JOIN.MESSAGE_MAIN"
+            ></div>
           </div>
           <div class="profile_image_wrap">
-            <img class="profile_image" *ngIf="topic.imageUrl" [src]="topic.imageUrl">
+            <img
+              class="profile_image"
+              *ngIf="topic.imageUrl"
+              [src]="topic.imageUrl"
+            />
             <div class="profile_image_filler" *ngIf="!topic.imageUrl">
-              <cos-initials *ngIf="topic.title" [name]="topic.title" [initialLimit]="1">
+              <cos-initials
+                *ngIf="topic.title"
+                [name]="topic.title"
+                [initialLimit]="1"
+              >
               </cos-initials>
             </div>
           </div>
@@ -51,23 +77,45 @@
       </div>
     </div>
     <div class="dialog_content">
-      <div class="info_row" translate="COMPONENTS.TOPIC_JOIN.MESSAGE_DESCRIPTION"></div>
+      <div
+        class="info_row"
+        translate="COMPONENTS.TOPIC_JOIN.MESSAGE_DESCRIPTION"
+      ></div>
     </div>
     <div class="dialog_content">
       <div class="dialog_info_wrap">
         <div class="dialog_info">
-          <div class="info_heading bold" translate="COMPONENTS.TOPIC_JOIN.HEADING_WHAT_CAN_YOU_DO"></div>
+          <div
+            class="info_heading bold"
+            translate="COMPONENTS.TOPIC_JOIN.HEADING_WHAT_CAN_YOU_DO"
+          ></div>
           <div class="row">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.38602 14.8088L17.5256 6L19 7.59558L9.38602 18L5 13.2534L6.47436 11.6578L9.38602 14.8088Z"
-                fill="#2C3B47" />
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.38602 14.8088L17.5256 6L19 7.59558L9.38602 18L5 13.2534L6.47436 11.6578L9.38602 14.8088Z"
+                fill="#2C3B47"
+              />
             </svg>
             <span translate="COMPONENTS.TOPIC_JOIN.ITEM_PARTICIPATE"></span>
           </div>
           <div class="row">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.38602 14.8088L17.5256 6L19 7.59558L9.38602 18L5 13.2534L6.47436 11.6578L9.38602 14.8088Z"
-                fill="#2C3B47" />
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.38602 14.8088L17.5256 6L19 7.59558L9.38602 18L5 13.2534L6.47436 11.6578L9.38602 14.8088Z"
+                fill="#2C3B47"
+              />
             </svg>
             <span translate="COMPONENTS.TOPIC_JOIN.ITEM_NOTIFICATIONS"></span>
           </div>
@@ -83,11 +131,26 @@
     </div>
     <div class="dialog_content no_footer">
       <div class="button_wrap">
-        <button class="btn_big_submit" [dialog-close]="true" translate="COMPONENTS.TOPIC_JOIN.BTN_JOIN"></button>
-        <a dialog-close translate="COMPONENTS.TOPIC_JOIN.LNK_CANCEL"></a>
+        <div class="actions_wrap">
+          <button
+            class="btn_big_submit"
+            [dialog-close]="true"
+            translate="COMPONENTS.TOPIC_JOIN.BTN_JOIN"
+          ></button>
+          <button
+            *ngIf="topic.visibility === 'public'"
+            id="group_button"
+            (click)="goToTopic()"
+            translate="COMPONENTS.TOPIC_JOIN.BTN_GO_TO_TOPIC"
+            class="btn_medium_secondary ng-star-inserted"
+          ></button>
+        </div>
+        <a
+          [dialog-close]="false"
+          translate="COMPONENTS.TOPIC_JOIN.LNK_CANCEL"
+        ></a>
       </div>
     </div>
-    <div class="dialog_footer">
-    </div>
+    <div class="dialog_footer"></div>
   </div>
 </div>

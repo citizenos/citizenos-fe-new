@@ -1,5 +1,18 @@
 .dialog  {
   max-width: 560px;
+
+  .with_buttons {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .actions_wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
 }
 .profile_image_filler {
   height: 40px;

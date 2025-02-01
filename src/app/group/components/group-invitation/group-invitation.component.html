@@ -10,24 +10,39 @@
     <div class="dialog_header">
       <div class="header_with_icon">
         <div class="icon_notification">
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <rect width="40" height="40" rx="20" fill="#1168A8" />
             <path
               d="M23 11.5292C23 12.926 21.9255 14.0583 20.6 14.0583C19.2745 14.0583 18 12.926 18 11.5292C18 10.1323 19.2745 9 20.6 9C21.9255 9 23 10.1323 23 11.5292Z"
-              fill="white" />
+              fill="white"
+            />
             <path
               d="M17.3359 16.5357L22.8319 15.8098L20.4295 27.7096C20.2591 28.5695 20.4991 29.0576 21.1591 29.0576C21.6247 29.0576 22.3255 28.8806 22.8055 28.4354L22.5943 29.4876C21.9055 30.3626 20.3863 31 19.0783 31C17.3911 31 16.6735 29.9327 17.1391 27.664L18.9103 18.8929C19.0639 18.1518 18.9247 17.8837 18.2191 17.7067L17.1391 17.4968L17.3359 16.5357Z"
-              fill="white" />
+              fill="white"
+            />
           </svg>
         </div>
         <h4 class="title" translate="MODALS.GROUP_INVITE_VIEW_HEADING"></h4>
       </div>
       <div class="dialog_close">
         <a class="btn_dialog_close icon" dialog-close>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               d="M7.72152 6.29537C7.3277 5.90154 6.68919 5.90154 6.29537 6.29537C5.90154 6.68919 5.90154 7.3277 6.29537 7.72153L10.5738 12L6.29541 16.2785C5.90159 16.6723 5.90159 17.3108 6.29541 17.7046C6.68923 18.0985 7.32774 18.0985 7.72156 17.7046L12 13.4262L16.2784 17.7046C16.6723 18.0985 17.3108 18.0985 17.7046 17.7046C18.0984 17.3108 18.0984 16.6723 17.7046 16.2785L13.4262 12L17.7046 7.72153C18.0985 7.3277 18.0985 6.68919 17.7046 6.29537C17.3108 5.90154 16.6723 5.90154 16.2785 6.29537L12 10.5739L7.72152 6.29537Z"
-              fill="#2C3B47" />
+              fill="#2C3B47"
+            />
           </svg>
         </a>
       </div>
@@ -36,13 +51,21 @@
       <div class="dialog_info_wrap">
         <div class="dialog_info row">
           <div class="delete_info_button_wrap">
-            <div class="delete_info_text" translate="MODALS.GROUP_INVITE_VIEW_MESSAGE_MAIN"></div>
+            <div
+              class="delete_info_text"
+              translate="MODALS.GROUP_INVITE_VIEW_MESSAGE_MAIN"
+            ></div>
           </div>
           <div class="profile_image_wrap">
-            <div class="profile_image" *ngIf="invite.group.imageUrl"><img [src]="invite.group.imageUrl" /></div>
+            <div class="profile_image" *ngIf="invite.group.imageUrl">
+              <img [src]="invite.group.imageUrl" />
+            </div>
             <div class="profile_image_filler">
-              <cos-initials *ngIf="!invite.group.imageUrl && invite.group.name" [name]="invite.group.name"
-                [initialLimit]="1"></cos-initials>
+              <cos-initials
+                *ngIf="!invite.group.imageUrl && invite.group.name"
+                [name]="invite.group.name"
+                [initialLimit]="1"
+              ></cos-initials>
             </div>
           </div>
           <div class="bold" [innerHTML]="invite.group.name"></div>
@@ -54,34 +77,47 @@
         <div class="dialog_info">
           <div class="row">
             <div translate="MODALS.GROUP_INVITE_VIEW_LBL_GROUP_NAME"></div>
-            <div class="bold">{{invite.group.name}}</div>
+            <div class="bold">{{ invite.group.name }}</div>
           </div>
           <div class="row">
             <div translate="MODALS.GROUP_INVITE_VIEW_LBL_INVITED_BY"></div>
-            <div class="bold">{{invite.creator.name}}</div>
+            <div class="bold">{{ invite.creator.name }}</div>
           </div>
           <div class="row">
-
-            <div translate="MODALS.GROUP_INVITE_VIEW_LBL_INVITATION_SENT_TO"></div>
-            <div class="bold">{{invite.user.email}}</div>
+            <div
+              translate="MODALS.GROUP_INVITE_VIEW_LBL_INVITATION_SENT_TO"
+            ></div>
+            <div class="bold">{{ invite.user.email }}</div>
           </div>
           <div class="row">
             <div translate="MODALS.GROUP_INVITE_VIEW_LBL_GROUP_LEVEL"></div>
-            <div class="bold">{{'TXT_GROUP_LEVELS_' + invite.level | uppercase | translate}}</div>
+            <div class="bold">
+              {{ "TXT_GROUP_LEVELS_" + invite.level | uppercase | translate }}
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="dialog_content" *ngIf="!invite.user.isRegistered">
       <div class="dialog_info_wrap">
-        <div [innerHTML]="'MODALS.GROUP_INVITE_VIEW_TXT_COMPLETE_ACCOUNT' | translate:{email: invite.user.email}"></div>
+        <div
+          [innerHTML]="
+            'MODALS.GROUP_INVITE_VIEW_TXT_COMPLETE_ACCOUNT'
+              | translate : { email: invite.user.email }
+          "
+        ></div>
       </div>
     </div>
     <div class="dialog_content" *ngIf="invite.user.isRegistered">
       <div class="dialog_info_wrap">
         <div class="dialog_info">
           <div class="row">
-            <b [innerHTML]="'MODALS.GROUP_INVITE_VIEW_BTN_LOGIN_AS' | translate:{email: invite.user.email}"></b>
+            <b
+              [innerHTML]="
+                'MODALS.GROUP_INVITE_VIEW_BTN_LOGIN_AS'
+                  | translate : { email: invite.user.email }
+              "
+            ></b>
           </div>
           <div class="row">
             <span translate="MODALS.GROUP_INVITE_VIEW_EMAIL_INFO"></span>
@@ -93,29 +129,57 @@
       <div class="dialog_info_wrap">
         <div class="dialog_info row">
           <div>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <rect width="24" height="24" rx="4" fill="#1168a8"></rect>
               <path
                 d="M13.75 6.5C13.75 7.32843 13.0784 8 12.25 8C11.4216 8 10.75 7.32843 10.75 6.5C10.75 5.67157 11.4216 5 12.25 5C13.0784 5 13.75 5.67157 13.75 6.5Z"
-                fill="white"></path>
+                fill="white"
+              ></path>
               <path
                 d="M10.2099 10.0623L13.6449 9.63184L12.1434 16.6893C12.0369 17.1993 12.1869 17.4888 12.5994 17.4888C12.8904 17.4888 13.3284 17.3838 13.6284 17.1198L13.4964 17.7438C13.0659 18.2628 12.1164 18.6408 11.2989 18.6408C10.2444 18.6408 9.79593 18.0078 10.0869 16.6623L11.1939 11.4603C11.2899 11.0208 11.2029 10.8618 10.7619 10.7568L10.0869 10.6323L10.2099 10.0623Z"
-                fill="white"></path>
+                fill="white"
+              ></path>
             </svg>
           </div>
-          <span translate="MODALS.GROUP_INVITE_VIEW_LBL_ADDITIONAL_ACTIONS"> </span>
-          <a [href]="config.about" translate="MODALS.GROUP_INVITE_VIEW_LNK_LEARN_MORE"></a>
+          <span translate="MODALS.GROUP_INVITE_VIEW_LBL_ADDITIONAL_ACTIONS">
+          </span>
+          <a
+            [href]="config.about"
+            translate="MODALS.GROUP_INVITE_VIEW_LNK_LEARN_MORE"
+          ></a>
         </div>
       </div>
     </div>
-    <div class="dialog_footer with_buttons">
-      <div></div>
-      <div class="button_row">
-        <a [dialog-close]="true" translate="MODALS.GROUP_INVITE_VIEW_LNK_CANCEL"></a>
-        <button class="btn_medium_submit" dialog-close (click)="doAccept()">
-          <span *ngIf="invite.user.isRegistered" translate="MODALS.GROUP_INVITE_VIEW_BTN_GO_TO_LOGIN"></span>
-          <span *ngIf="!invite.user.isRegistered" translate="MODALS.GROUP_INVITE_VIEW_BTN_COMPLETE_ACCOUNT"></span>
-        </button>
+
+    <div class="dialog_content no_footer">
+      <div class="button_wrap">
+        <div class="actions_wrap">
+          <button class="btn_medium_submit" [dialog-close]="true">
+            <span
+              *ngIf="invite.user.isRegistered"
+              translate="MODALS.GROUP_INVITE_VIEW_BTN_GO_TO_LOGIN"
+            ></span>
+            <span
+              *ngIf="!invite.user.isRegistered"
+              translate="MODALS.GROUP_INVITE_VIEW_BTN_COMPLETE_ACCOUNT"
+            ></span>
+          </button>
+          <button
+            *ngIf="invite.group.visibility === 'public'"
+            id="group_button"
+            (click)="goToGroup()"
+            translate="COMPONENTS.GROUP_JOIN.BTN_GO_TO_GROUP"
+            class="btn_medium_secondary ng-star-inserted"
+          ></button>
+        </div>
+
+        <a dialog-close translate="COMPONENTS.GROUP_JOIN.LNK_CANCEL"></a>
       </div>
     </div>
   </div>

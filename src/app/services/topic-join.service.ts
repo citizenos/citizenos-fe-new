@@ -13,7 +13,7 @@ export class TopicJoinService {
 
   constructor(private Location: LocationService, private http: HttpClient) { }
 
-  getByToken(token: string) {
+  get(token: string) {
     let path = this.Location.getAbsoluteUrlApi('/api/topics/join/:token', { token: token })
 
     return this.http.get<ApiResponse>(path, { withCredentials: true, responseType: 'json', observe: 'body' }).pipe(

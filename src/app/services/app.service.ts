@@ -98,6 +98,11 @@ export class AppService {
     })
   }
 
+  doNavigateLogin(data: { redirectSuccess?: string, groupId?: string, topicId?: string }) {
+    this.dialog.closeAll();
+    this.router.navigate(['/account/login'], { queryParams: data });
+  }
+
   doShowTopicNotificationSettings(topicId: string) {
     const topicSettingsDialog = this.dialog.open(TopicNotificationSettingsComponent, { data: { topicId } });
     topicSettingsDialog.afterClosed().subscribe(() => {

@@ -90,7 +90,11 @@
     
     <div class="dialog_content no_footer">
       <div class="button_wrap">
-        <button class="btn_big_submit" [dialog-close]="true" translate="COMPONENTS.GROUP_JOIN.BTN_JOIN"></button>
+        <div class="actions_wrap">
+          <button class="btn_big_submit" [dialog-close]="true" translate="COMPONENTS.GROUP_JOIN.BTN_JOIN"></button>
+          <button *ngIf="group.visibility === 'public'" id="group_button" (click)="goToGroup()" translate="COMPONENTS.GROUP_JOIN.BTN_GO_TO_GROUP" class="btn_medium_secondary ng-star-inserted"></button>
+        </div>
+
         <a dialog-close translate="COMPONENTS.GROUP_JOIN.LNK_CANCEL"></a>
       </div>
     </div>

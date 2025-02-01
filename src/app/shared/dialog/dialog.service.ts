@@ -6,7 +6,7 @@ import { DialogRef } from './dialog-ref';
 import { DIALOG_DATA } from './dialog-tokens';
 
 export interface DialogConfig {
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 @Injectable({

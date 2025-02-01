@@ -440,6 +440,7 @@
       "MESSAGE_DESCRIPTION": "This group has set rules of conduct. Please read and follow them so everyone has a great experience.",
       "HEADING_RULES": "@:VIEWS.GROUP.RULES_OF_CONDUCT",
       "BTN_JOIN": "@:VIEWS.GROUP.BTN_JOIN",
+      "BTN_GO_TO_GROUP": "View group without joining",
       "LNK_CANCEL": "@:LNK_CANCEL"
     },
     "IDEABOX": {
@@ -533,6 +534,7 @@
       "ITEM_NOTIFICATIONS": "Receive notifications of activity within the topic",
       "ITEM_REQUEST_EDIT": "Request to become a co-creator",
       "BTN_JOIN": "@:VIEWS.TOPICS_TOPICID.BTN_JOIN",
+      "BTN_GO_TO_TOPIC": "View topic without joining",
       "LNK_CANCEL": "@:LNK_CANCEL"
     },
     "GROUP_MEMBER_USER": {
@@ -1644,7 +1646,7 @@
     "GROUP_INVITE_VIEW_LBL_INVITED_BY": "Invited by:",
     "GROUP_INVITE_VIEW_LBL_INVITATION_SENT_TO": "Invitation sent to:",
     "GROUP_INVITE_VIEW_LBL_GROUP_LEVEL": "Group rights:",
-    "GROUP_INVITE_VIEW_BTN_LOGIN_AS": "To access this group, please log in using {{email}}",
+    "GROUP_INVITE_VIEW_BTN_LOGIN_AS": "To join this group, please log in using {{email}}",
     "GROUP_INVITE_VIEW_EMAIL_INFO":"By joining this group, you agree to your email address being made visible to the group's admin(s).",
     "GROUP_INVITE_VIEW_LNK_CANCEL": "@:LNK_CANCEL",
     "GROUP_INVITE_VIEW_BTN_GO_TO_LOGIN": "Log in to join group",
@@ -1706,7 +1708,7 @@
     "TOPIC_INVITE_VIEW_LBL_INVITATION_SENT_TO": "Invitation sent to:",
     "TOPIC_INVITE_VIEW_LBL_TOPIC_LEVEL": "Topic rights:",
     "TOPIC_INVITE_VIEW_TXT_COMPLETE_ACCOUNT": "<b>Heads up!</b> You must finish creating your account with {{email}} to access this topic",
-    "TOPIC_INVITE_VIEW_BTN_LOGIN_AS": "To access this topic, please log in using {{email}}",
+    "TOPIC_INVITE_VIEW_BTN_LOGIN_AS": "To join this topic, please log in using {{email}}",
     "TOPIC_INVITE_VIEW_HEADING_AFTER_JOIN": "What you can do once you join a topic",
     "TOPIC_INVITE_VIEW_AFTER_JOIN_ITEM_1": "@:COMPONENTS.TOPIC_JOIN.ITEM_PARTICIPATE",
     "TOPIC_INVITE_VIEW_AFTER_JOIN_ITEM_2": "Receive notifications of activity within the topic",

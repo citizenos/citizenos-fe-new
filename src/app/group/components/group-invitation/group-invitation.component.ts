@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { DialogService, DIALOG_DATA } from 'src/app/shared/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, take } from 'rxjs';
+import { combineLatest, take, tap } from 'rxjs';
 import { AuthService } from '@services/auth.service';
 import { ConfigService } from '@services/config.service';
 import { LocationService } from '@services/location.service';
@@ -12,123 +12,189 @@ import { InviteData } from 'src/app/interfaces/dialogdata';
 @Component({
   selector: 'app-group-invitation',
   templateUrl: './group-invitation.component.html',
-  styleUrls: ['./group-invitation.component.scss']
+  styleUrls: ['./group-invitation.component.scss'],
 })
-export class GroupInvitationComponent implements OnInit {
+export class GroupInvitationComponent {
   invite: any;
+  currentUrl: string | undefined;
   config = <any>this.ConfigService.get('links');
-  constructor(private ConfigService: ConfigService, private dialog: DialogService, @Inject(DIALOG_DATA) private data: InviteData, private Auth: AuthService, private Location: LocationService, private router: Router) {
+  constructor(
+    private ConfigService: ConfigService,
+    private dialog: DialogService,
+    @Inject(DIALOG_DATA) private data: InviteData,
+    private Auth: AuthService,
+    private router: Router
+  ) {
     this.invite = this.data.invite;
+    this.currentUrl = this.data.currentUrl;
   }
 
-  ngOnInit(): void {
+  goToGroup() {
+    this.dialog.closeAll();
+    this.router.navigate(['/groups/', this.invite.groupId]);
   }
-
-  doAccept() {
-    // 3. The invited User is NOT logged in - https://github.com/citizenos/citizenos-fe/issues/112#issuecomment-541674320
-    if (!this.Auth.loggedIn$.value) {
-        const currentUrl = this.Location.currentUrl();
-        if (!this.invite.user.isRegistered) {
-            // The invited User is not registered, the User has been created by the system - https://github.com/citizenos/citizenos-fe/issues/773
-            this.router.navigate(['/account','signup'], {
-              queryParams: {
-                inviteId: this.invite.id,
-                redirectSuccess: currentUrl,
-                email: this.invite.user.email
-              }
-            });
-        } else {
-          this.router.navigate(['/account','login'], {queryParams: {
-            userId: this.invite.user.id,
-            redirectSuccess: currentUrl,
-            email: this.invite.user.email
-          }});
-        }
-    }
-
-    // 2. User logged in, but opens an invite NOT meant to that account  - https://github.com/citizenos/citizenos-fe/issues/112#issuecomment-541674320
-    if (this.Auth.loggedIn$.value && this.invite.user.id !== this.Auth.user.value.id) {
-        this.Auth
-            .logout()
-            .pipe(take(1))
-            .subscribe(() => {
-              const currentUrl = this.Location.currentUrl();
-              this.router.navigate(['/account','login'], {queryParams: {
-                userId: this.invite.user.id,
-                redirectSuccess: currentUrl,
-                email: this.invite.user.email
-              }});
-
-            });
-    }
-};
 }
 
 @Component({
   selector: 'group-invitation-dialog',
   template: '',
 })
-
-export class GroupInvitationDialogComponent implements OnInit {
+export class GroupInvitationDialogComponent {
   inviteId: string = '';
+  join$;
 
-  constructor(Auth: AuthService, dialog: DialogService, GroupInviteUserService: GroupInviteUserService, route: ActivatedRoute, router: Router, Notification: NotificationService) {
-
-    /*LOAD INVITE*/
-    route.params.pipe(
-      take(1),
-      switchMap((params: any) => {
-        this.inviteId = params['inviteId'];
-        return GroupInviteUserService.get(params)
-      })
-    ).subscribe({
-      next: (groupInvite: any) => {
-        groupInvite.inviteId = this.inviteId;
-        // 1. The invited User is logged in - https://github.com/citizenos/citizenos-fe/issues/112#issuecomment-541674320
-        if (Auth.loggedIn$.value && groupInvite.user.id === Auth.user.value.id) {
-          GroupInviteUserService
-            .accept(groupInvite)
-            .pipe(take(1))
-            .subscribe({
-              next: () => {
-                router.navigate(['groups', groupInvite.groupId])
-              },
-              error: (err) => {
-                Notification.addError(err.message || err.status.message);
-                console.error('Invite error', err)
-              }
-            });
-        } else {
-          const invitationDialog = dialog.open(GroupInvitationComponent,
-            {
-              data: {
-                invite: groupInvite
-              }
-            });
-
-            invitationDialog.afterClosed().subscribe({
-              next: (res) => {
-                if (res===true) {
-                  router.navigate(['/']);
-                }
-              }
-            })
-        }
-      },
-      error: (err) => {
-        router.navigate(['/']);
-        setTimeout(() => {
-          console.log(err)
-          if (err.code === 41002 || err.status?.code === 41002) {
-            Notification.addError('MSG_ERROR_GET_API_USERS_GROUPS_INVITES_USERS_41002', 'MSG_ERROR_GET_API_USERS_GROUPS_INVITES_USERS_41002_HEADING');
-          } else {
+  constructor(
+    Auth: AuthService,
+    dialog: DialogService,
+    GroupInviteUserService: GroupInviteUserService,
+    route: ActivatedRoute,
+    router: Router,
+    Notification: NotificationService,
+    Location: LocationService
+  ) {
+    function joinGroup(groupInvite: any) {
+      GroupInviteUserService.accept(groupInvite)
+        .pipe(take(1))
+        .subscribe({
+          next: () => {
+            router.navigate(['groups', groupInvite.groupId]);
+          },
+          error: (err) => {
             Notification.addError(err.message || err.status.message);
-          }
-        }, 400);
-      }
-    })
-  }
+            console.error('Invite error', err);
+          },
+        });
+    }
 
-  ngOnInit(): void {
+    function showJoinDialog(groupInvite: any, currentUrl: string) {
+      /**
+       * @note Add a redirectSuccess query parameter to the login URL
+       * to join the user to the topic directly after login.
+       */
+      let redirect = currentUrl;
+      route.queryParams.subscribe((params) => {
+        if (!params['join']) {
+          redirect = `${redirect}?join=true`;
+        }
+      });
+
+      const queryParams = {
+        redirectSuccess: redirect,
+        email: groupInvite.user.email,
+      };
+
+      const invitationDialog = dialog.open(GroupInvitationComponent, {
+        data: {
+          invite: groupInvite,
+          currentUrl,
+        },
+      });
+
+      invitationDialog.afterClosed().subscribe({
+        next: (res) => {
+          if (res === true) {
+            if (Auth.loggedIn$.value) {
+              if (groupInvite.user.id !== Auth.user.value.id) {
+                Auth.logout()
+                  .pipe(take(1))
+                  .subscribe(() => {
+                    router.navigate(['/account/login'], {
+                      queryParams: {
+                        ...queryParams,
+                        userId: groupInvite.user.id,
+                      },
+                    });
+                  });
+              } else {
+                joinGroup(groupInvite);
+              }
+            } else {
+              /**
+               * @note This case works not as expected.
+               * Or good to have an eye on this case.
+               * @see group-invite-user.service.ts
+               */
+              if (groupInvite.user.isRegistered) {
+                router.navigate(['/account/login'], {
+                  queryParams: {
+                    ...queryParams,
+                    userId: groupInvite.user.id,
+                  },
+                });
+              } else {
+                router.navigate(['/account', 'signup'], {
+                  queryParams: {
+                    ...queryParams,
+                    inviteId: groupInvite.id,
+                  },
+                });
+              }
+            }
+          }
+        },
+      });
+    }
+
+    this.join$ = combineLatest([
+      Auth.loggedIn$,
+      Auth.user,
+      route.params,
+      route.queryParams,
+    ])
+      .pipe(
+        take(1),
+        tap(([_, __, routeParams, queryParams]) => {
+          this.inviteId = routeParams['inviteId'];
+          GroupInviteUserService.get(routeParams).subscribe({
+            next: (groupInvite) => {
+              groupInvite.inviteId = this.inviteId;
+
+              const joinUrlForRedirect = Location.currentUrl();
+
+              const hasDirectJoin =
+                queryParams && queryParams['join'] === 'true';
+
+              /**
+               * @todo Implement userIsInTopic check.
+               * Should be a boolean value returned from the API.
+               *
+               * Or redirect to the dashboard if the user is already in the topic.
+               * Or show info toast.
+               */
+              const userIsInTopic = false;
+
+              if (userIsInTopic) {
+                router.navigate(['/groups', groupInvite.topicId]);
+              } else if (
+                Auth.loggedIn$.value &&
+                groupInvite.user.id === Auth.user.value.id &&
+                hasDirectJoin
+              ) {
+                joinGroup(groupInvite);
+              } else {
+                router.navigate(['dashboard']);
+                showJoinDialog(groupInvite, joinUrlForRedirect);
+              }
+            },
+            error: (err) => {
+              router.navigate(['/']);
+              setTimeout(() => {
+                console.log(err);
+                if (err.code === 41002 || err.status?.code === 41002) {
+                  Notification.addError(
+                    'MSG_ERROR_GET_API_USERS_GROUPS_INVITES_USERS_41002',
+                    'MSG_ERROR_GET_API_USERS_GROUPS_INVITES_USERS_41002_HEADING'
+                  );
+                } else {
+                  Notification.addError(err.message || err.status.message);
+                }
+              }, 400);
+            },
+          });
+        })
+      )
+      .subscribe({
+        error: (err) => console.error('Token join error', err),
+      });
   }
 }
