@@ -362,7 +362,7 @@
               </div>
 
               <div class="overlay" *ngIf="showMobileOverlay()" (click)="closeMobileFilter();"></div>
-              
+
               <div class="mobile_filters_wrap" [ngClass]="{'active': showMobileOverlay()}">
                 <div class="options button_options" *ngIf="mobileIdeaFilters.type">
                   <a class="btn_medium_close icon" (click)="closeMobileFilter()">
@@ -379,7 +379,7 @@
                       <input type="radio" name="type">
                       <span class="checkmark"></span>
                     </label>
-  
+
                     <label class="checkbox" *ngIf="(AuthService.loggedIn$ | async)"
                       (click)="mobileIdeaFilters.type = 'iCreated';">
                       <span
@@ -387,7 +387,7 @@
                       <input type="radio" name="type">
                       <span class="checkmark"></span>
                     </label>
-  
+
                     <label class="checkbox" *ngIf="(AuthService.loggedIn$ | async)"
                       (click)="mobileIdeaFilters.type = 'favourite';">
                       <span
@@ -395,7 +395,7 @@
                       <input type="radio" name="type">
                       <span class="checkmark"></span>
                     </label>
-  
+
                     <label class="checkbox" (click)="mobileIdeaFilters.type = 'showModerated';">
                       <span
                         [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_TYPE_MODERATED' | translate | titlecase"></span>
@@ -417,14 +417,14 @@
                         fill="#2C3B47" />
                     </svg>
                   </a>
-                  
+
                   <div class="options_wrapper">
                     <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'all';">
                       <span [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ALL' | translate | titlecase"></span>
                       <input type="radio" name="orderBy">
                       <span class="checkmark"></span>
                     </label>
-  
+
                     <label *ngIf="(AuthService.loggedIn$ | async)" class="checkbox"
                       (click)="mobileIdeaFilters.orderBy = 'likes';">
                       <span
@@ -432,14 +432,14 @@
                       <input type="radio" name="orderBy">
                       <span class="checkmark"></span>
                     </label>
-  
+
                     <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'recent';">
                       <span
                         [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_RECENT' | translate | titlecase"></span>
                       <input type="radio" name="orderBy">
                       <span class="checkmark"></span>
                     </label>
-  
+
                     <label class="checkbox" (click)="mobileIdeaFilters.orderBy = 'replies';">
                       <span
                         [innerHTML]="'COMPONENTS.TOPIC_IDEATION.FILTER_ORDER_MOST_REPLIES' | translate | titlecase"></span>
@@ -468,7 +468,7 @@
                       <input type="radio" name="participants">
                       <span class="checkmark"></span>
                     </label>
-  
+
                     <ng-container *ngIf="participants$ | async as participants;">
                       <ng-container *ngFor="let user of participants">
                         <label class="checkbox" (click)="mobileIdeaFilters.participants = user">
@@ -484,7 +484,7 @@
                               {{user.name}}
                             </div>
                           </div>
-  
+
                           <input type="radio" name="participants">
                           <span class="checkmark"></span>
                         </label>
@@ -845,6 +845,5 @@
   </div>
 </ng-container>
 <ng-container *ngIf="topic.ideationId && !hasIdeationEndedExpired()">
-  <add-idea *ngIf="topic.status === TopicService.STATUSES.ideation" [topicId]="topic.id" [ideationId]="topic.ideationId"
-    [(notification)]="notification"></add-idea>
+  <add-idea *ngIf="topic.status === TopicService.STATUSES.ideation" [topicId]="topic.id" [ideationId]="topic.ideationId"></add-idea>
 </ng-container>

@@ -10,7 +10,7 @@ export class CosInputComponent {
   @Input() limit?: string;
   placeholderElement?: HTMLElement;
   limitElement?: HTMLElement;
-  constructor (private elementRef: ElementRef) {}
+  constructor (private readonly elementRef: ElementRef) {}
 
   ngAfterContentChecked() {
     const input = this.elementRef.nativeElement.querySelector('input, .dropdown, textarea');

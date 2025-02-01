@@ -69,7 +69,7 @@
               <img [src]="image.link" />
               <a class="name">{{image.name}}</a>
             </div>
-            <button class="btn_small_plain icon" (click)="removeImage(index)">
+            <button class="btn_small_plain icon" (click)="removeNewImage(index)">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M14 13.9997H15.3333L15.3333 19.333H14L14 13.9997Z" fill="#2C3B47" />
                 <path d="M18 13.9997H16.6667V19.333H18V13.9997Z" fill="#2C3B47" />
@@ -106,7 +106,10 @@
         </svg>
         <span translate="COMPONENTS.POST_ARGUMENT.BTN_ADD_IMAGE"></span>
       </button>
-      <button class="btn_medium_submit icon" (click)="postIdea()" [ngClass]="{disabled: ideaForm.invalid}">
+      <button class="btn_medium_secondary icon" (click)="draftIdea()" [ngClass]="{disabled: ideaForm.invalid}">
+        <span class="btn_text" translate="COMPONENTS.ADD_IDEA.BTN_IDEA_DRAFT"></span>
+      </button>
+      <button class="btn_medium_submit icon" (click)="publishIdea()" [ngClass]="{disabled: ideaForm.invalid}">
         <span class="btn_text" translate="COMPONENTS.ADD_IDEA.BTN_IDEA_POST"></span>
       </button>
     </div>

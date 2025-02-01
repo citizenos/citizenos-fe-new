@@ -1,20 +1,23 @@
 import { IdeaAttachmentService } from '@services/idea-attachment.service';
 import { TopicIdeationService } from '@services/topic-ideation.service';
+import { TopicIdeaService } from '@services/topic-idea.service';
 import { TopicMemberUserService } from '@services/topic-member-user.service';
+import { AppService } from '@services/app.service';
+import { AuthService } from '@services/auth.service';
+import { NotificationService } from '@services/notification.service';
+import { UploadService } from '@services/upload.service';
+
+import { Attachment } from '@interfaces/attachment';
+import { Idea, IdeaStatus } from '@interfaces/idea';
+import { Notification } from '@interfaces/notification';
+import { MarkdownDirective } from 'src/app/directives/markdown.directive';
 
 import { trigger, state, style } from '@angular/animations';
-import { Component, OnInit, Input, Inject, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, Inject, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { take, map, takeWhile, of } from 'rxjs';
-import { AppService } from '@services/app.service';
-import { AuthService } from '@services/auth.service';
-import { TopicIdeaService } from '@services/topic-idea.service';
-import { NotificationService } from '@services/notification.service';
-import { MarkdownDirective } from 'src/app/directives/markdown.directive';
-import { UploadService } from '@services/upload.service';
-import { Attachment } from 'src/app/interfaces/attachment';
 
 @Component({
   selector: 'add-idea',
@@ -38,14 +41,15 @@ export class AddIdeaComponent {
 
   @Input() topicId!: string;
   @Input() ideationId!: string;
-  @Input() notification: any;
+  @Input() notification?: Notification;
   @Output() notificationChange = new EventEmitter<any>();
 
   @ViewChild(MarkdownDirective) editor!: MarkdownDirective;
   @ViewChild('imageUpload') fileInput?: ElementRef;
 
   tmpImageUrl?: string;
-  images = <any[]>[]
+  images = <any[]>[];
+  newImages = <any[]>[];
   topicAttachments$ = of(<Attachment[] | any[]>[]);
   attachments = <any[]>[]
 
@@ -61,19 +65,19 @@ export class AddIdeaComponent {
   });
   IMAGE_LIMIT = 10;
   IDEA_STATEMENT_MAXLENGTH = 1024;
-  private IDEA_VERSION_SEPARATOR = '_v';
+  private readonly IDEA_VERSION_SEPARATOR = '_v';
   constructor(
     public app: AppService,
-    private AuthService: AuthService,
-    private TopicIdeationService: TopicIdeationService,
-    private UploadService: UploadService,
-    private IdeaAttachmentService: IdeaAttachmentService,
-    private Notification: NotificationService,
-    public TopicIdeaService: TopicIdeaService,
-    private TopicMemberUserService: TopicMemberUserService,
-    @Inject(ActivatedRoute) private route: ActivatedRoute,
-    @Inject(TranslateService) public translate: TranslateService,
-    @Inject(Router) private router: Router) {
+    private readonly AuthService: AuthService,
+    private readonly TopicIdeationService: TopicIdeationService,
+    private readonly UploadService: UploadService,
+    readonly IdeaAttachmentService: IdeaAttachmentService,
+    private readonly Notification: NotificationService,
+    public readonly TopicIdeaService: TopicIdeaService,
+    private readonly TopicMemberUserService: TopicMemberUserService,
+    @Inject(ActivatedRoute) readonly route: ActivatedRoute,
+    @Inject(TranslateService) public readonly translate: TranslateService,
+    @Inject(Router) readonly router: Router) {
     this.addIdea = this.app.addIdea.pipe(map((val) => {
       this.description = '';
       this.ideaForm.reset();
@@ -133,36 +137,60 @@ export class AddIdeaComponent {
       this.ideaForm.markAsUntouched()
     })
   }
-  postIdea() {
+  draftIdea() {
+    this.postIdea(IdeaStatus.draft);
+  }
+
+  publishIdea() {
+    this.postIdea(IdeaStatus.published);
+  }
+
+  afterPost(idea: Idea) {
+    this.doSaveAttachments(idea.id)
+    this.TopicIdeaService.reload();
+    this.TopicIdeationService.reload();
+    this.TopicMemberUserService.reload();
+    this.description = '';
+    this.ideaForm.reset();
+    this.clear();
+    this.app.addIdea.next(false);
+    this.afterPostNavigate(idea);
+  }
+
+  afterPostNavigate(idea: Idea) {
+    if (idea.status === IdeaStatus.draft) {
+      this.router.navigate(
+        ['ideation', this.ideationId],
+        {
+          relativeTo: this.route
+        });
+    }
+    /*  this.notificationChange.emit({
+        level: 'success'
+        message: this.translate.instant('COMPONENTS.ADD_IDEA.MSG_SUCCESS')
+      })*/
+    this.router.navigate(
+      ['ideation', this.ideationId, 'ideas', idea.id],
+      {
+        relativeTo: this.route
+      });
+  }
+
+  postIdea(status?: IdeaStatus) {
     const idea = {
       parentVersion: 0,
       statement: this.ideaForm.value['statement'],
       description: this.ideaForm.value['description'],
       topicId: this.topicId,
-      ideationId: this.ideationId
+      ideationId: this.ideationId,
+      status: status
     };
     this.TopicIdeaService
       .save(idea)
       .pipe(take(1))
       .subscribe({
         next: (idea) => {
-          this.doSaveAttachments(idea.id)
-          this.TopicIdeaService.reload();
-          this.TopicIdeationService.reload();
-          this.TopicMemberUserService.reload();
-          this.description = '';
-          this.ideaForm.reset();
-          this.clear();
-          this.app.addIdea.next(false);
-          /*  this.notificationChange.emit({
-              level: 'success',Raul Liivrand
-              message: this.translate.instant('COMPONENTS.ADD_IDEA.MSG_SUCCESS')
-            })*/
-          this.router.navigate(
-            ['ideation', this.ideationId, 'ideas', idea.id],
-            {
-              relativeTo: this.route
-            });
+          this.afterPost(idea)
         },
         error: (err) => {
           console.error(err);
@@ -178,25 +206,24 @@ export class AddIdeaComponent {
   fileUpload() {
     const allowedTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/svg+xml'];
     const files = this.fileInput?.nativeElement.files;
-    if (this.images.length === this.IMAGE_LIMIT) {
-      return this.Notification.addError(this.translate.instant('MSG_ERROR_IDEA_IMAGE_LIMIT', {limit: this.IMAGE_LIMIT}));
+    if ((this.images.length + this.newImages.length) >= this.IMAGE_LIMIT) {
+      return this.Notification.addError(this.translate.instant('MSG_ERROR_IDEA_IMAGE_LIMIT', { limit: this.IMAGE_LIMIT }));
     }
     for (let i = 0; i < files.length; i++) {
       if (allowedTypes.indexOf(files[i].type) < 0) {
         this.Notification.addError(this.translate.instant('MSG_ERROR_FILE_TYPE_NOT_ALLOWED', { allowedFileTypes: allowedTypes.toString() }));
       } else if (files[i].size > 5000000) {
         this.Notification.addError(this.translate.instant('MSG_ERROR_FILE_TOO_LARGE', { allowedFileSize: '5MB' }));
-      } else if (this.images.length < 5) {
+      } else if ((this.images.length + i) < this.IMAGE_LIMIT) {
         const reader = new FileReader();
         reader.onload = () => {
           const file = files[i];
           file.link = reader.result;
-          this.images.push(file);
+          this.newImages.push(file);
         };
         reader.readAsDataURL(files[i]);
       } else {
-        i = files.length;
-        this.Notification.addError(this.translate.instant('MSG_ERROR_IDEA_IMAGE_LIMIT', {limit: this.IMAGE_LIMIT}));
+        this.Notification.addError(this.translate.instant('MSG_ERROR_IDEA_IMAGE_LIMIT', { limit: this.IMAGE_LIMIT }));
       }
     }
   }
@@ -215,8 +242,8 @@ export class AddIdeaComponent {
 
   doSaveAttachments(ideaId: string) {
     let i = 0;
-    while (i < this.images.length) {
-      let image = this.images[i];
+    while (i < this.newImages.length) {
+      let image = this.newImages[i];
       if (image) {
         image.source = this.IdeaAttachmentService.SOURCES.upload;
         this.UploadService.uploadIdeaImage({ topicId: this.topicId, ideationId: this.ideationId, ideaId }, image, { name: image.name })
@@ -242,7 +269,7 @@ export class AddIdeaComponent {
     }
   };
 
-  removeImage(index: number) {
-    this.images.splice(index, 1);
+  removeNewImage(index: number) {
+    this.newImages.splice(index, 1);
   }
 }

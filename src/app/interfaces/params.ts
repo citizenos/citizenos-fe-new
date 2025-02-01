@@ -1,4 +1,4 @@
-interface Params {
+export interface Params {
   page: number;
   offset: number;
   limit: number;

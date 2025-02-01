@@ -1,25 +1,28 @@
-import { Component, Input } from '@angular/core';
-import { Topic } from 'src/app/interfaces/topic';
+
 import { AuthService } from '@services/auth.service';
 import { AppService } from '@services/app.service';
 import { NotificationService } from '@services/notification.service';
 import { TopicService } from '@services/topic.service';
 import { TopicIdeationService } from '@services/topic-ideation.service';
-import { DialogService } from 'src/app/shared/dialog';
+import { DialogService } from '@shared/dialog';
 import { of, take, map, BehaviorSubject, combineLatest, switchMap } from 'rxjs';
-import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 import { TopicIdeaService } from '@services/topic-idea.service';
-import { Idea } from 'src/app/interfaces/idea';
-import { Folder } from 'src/app/interfaces/folder';
+import { Component, Input, NgZone } from '@angular/core';
+
 import { CreateIdeaFolderComponent } from '../create-idea-folder/create-idea-folder.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EditIdeationDeadlineComponent } from '../edit-ideation-deadline/edit-ideation-deadline.component';
 import { AddIdeasToFolderComponent } from '../add-ideas-to-folder/add-ideas-to-folder.component';
-import { User } from 'src/app/interfaces/user';
 import { EditIdeaFolderComponent } from '../edit-idea-folder/edit-idea-folder.component';
 import { TranslateService } from '@ngx-translate/core';
 import { TopicIdeationFoldersService } from '@services/topic-ideation-folders.service';
 
+import { Topic } from '@interfaces/topic';
+import { Idea, IdeaStatus } from '@interfaces/idea';
+import { Folder } from '@interfaces/folder';
+import { User } from '@interfaces/user';
+import { Notification } from '@interfaces/notification';
 
 @Component({
   selector: 'topic-ideation',
@@ -68,20 +71,20 @@ export class TopicIdeationComponent {
   folderFilter$ = new BehaviorSubject('');
   loadFolders$ = new BehaviorSubject<void>(undefined);
   selectedFolder?: Folder;
-  notification: any = null;
+  notification: Notification | null = null;
 
   constructor(
-    public app: AppService,
-    private dialog: DialogService,
-    private Notification: NotificationService,
-    public AuthService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    public translate: TranslateService,
-    public TopicService: TopicService,
-    private TopicIdeationService: TopicIdeationService,
-    private TopicIdeationFoldersService: TopicIdeationFoldersService,
-    public TopicIdeaService: TopicIdeaService
+    public readonly app: AppService,
+    private readonly dialog: DialogService,
+    private readonly Notification: NotificationService,
+    public readonly AuthService: AuthService,
+    private readonly route: ActivatedRoute,
+    public readonly translate: TranslateService,
+    public readonly TopicService: TopicService,
+    private readonly TopicIdeationService: TopicIdeationService,
+    private readonly TopicIdeationFoldersService: TopicIdeationFoldersService,
+    public readonly TopicIdeaService: TopicIdeaService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
@@ -125,9 +128,11 @@ export class TopicIdeationComponent {
 
           return this.TopicIdeaService.loadItems();
         }), map(
-          (newideas: any) => {
+          (newideas: Idea[]) => {
             this.allIdeas$ = [];
-            this.allIdeas$ = this.allIdeas$.concat(newideas);
+            this.allIdeas$ = this.allIdeas$.concat(newideas).sort((a) => {
+              return a.status === IdeaStatus.draft ? -1 : 1;
+            });
             return this.allIdeas$;
           }
         ));

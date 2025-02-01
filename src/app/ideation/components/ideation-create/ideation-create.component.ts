@@ -78,6 +78,7 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
     creatorId: '',
     question: '',
     deadline: null,
+    disableReplies: false,
     createdAt: '',
     updatedAt: ''
   };
@@ -247,20 +248,13 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
       }
       const tabIndex = this.tabs.indexOf(tab);
       if (tabIndex === 2) {
-        /*  if (this.voteCreateForm)
-            this.voteCreateForm.saveVoteSettings();*/
-      }
-      if (tabIndex === 2) {
         if (!this.ideation.question) {
           this.Notification.removeAll();
           this.Notification.addError('VIEWS.IDEATION_CREATE.ERROR_MISSING_QUESTION');
           return;
         }
-        /*  if (this.voteCreateForm)
-            this.voteCreateForm.saveVoteSettings();*/
       }
       if (tabIndex + 1 === 3) {
-        //   this.voteCreateForm?.filterOptions();
         setTimeout(() => {
           this.TopicService.readDescription(this.topic.id).pipe(take(1)).subscribe({
             next: (topic) => {
@@ -298,7 +292,7 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
 
   override saveAsDraft() {
     if (this.topic.status === this.TopicService.STATUSES.draft) {
-      const updateTopic = Object.assign({}, this.topic);
+      const updateTopic = { ...this.topic };
       if (!updateTopic.intro?.length) {
         updateTopic.intro = null;
       }
@@ -336,7 +330,7 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
   override publish() {
     this.titleInput?.nativeElement?.parentNode.parentNode.classList.remove('error');
     const isDraft = (this.topic.status === this.TopicService.STATUSES.draft);
-    const updateTopic = Object.assign({}, this.topic);
+    const updateTopic = { ...this.topic };
     if (!updateTopic.intro?.length) {
       updateTopic.intro = null;
     }
@@ -385,47 +379,6 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
     });
   }
 
-  /*override publish() {
-    this.titleInput?.nativeElement?.parentNode.parentNode.classList.remove('error');
-    const isDraft = (this.topic.status === this.TopicService.STATUSES.draft);
-    const updateTopic = Object.assign({}, this.topic);
-    if (!updateTopic.intro?.length) {
-      updateTopic.intro = null;
-    }
-
-    this.TopicService.patch(updateTopic).pipe(take(1)).subscribe({
-      next: () => {
-        if (!this.ideation.id) {
-          this.createIdeation(true);
-        } else if ([this.TopicService.STATUSES.draft, this.TopicService.STATUSES.ideation].indexOf(this.topic.status) > -1) {
-          this.updateIdeation(true);
-        }
-
-        this.topicGroups.forEach((group) => {
-          this.saveMemberGroup(group)
-        });
-        this.saveImage()
-          .subscribe({
-            next: (res: any) => {
-              if (res && !res.link) return;
-              if (res.link) {
-                this.topic.imageUrl = res.link;
-              }
-              this.hasChanges$.next(false);
-              this.router.navigate(['/', this.translate.currentLang, 'topics', this.topic.id]);
-              this.TopicService.reloadTopic();
-            },
-            error: (err) => {
-              console.log('publish error', err)
-            }
-          });
-      },
-      error: (err: any) => {
-        console.log('ERROR', err);
-      }
-    });
-  }*/
-
   saveIdeationSettings(ideation?: any) {
     if (ideation) {
       this.ideation = ideation;
@@ -433,7 +386,7 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
   }
 
   createIdeation(updateTopicStatus?: boolean) {
-    const createIdeation: any = Object.assign({ topicId: this.topic.id }, this.ideation);
+    const createIdeation: any = { topicId: this.topic.id , ...this.ideation };
     if (!this.deadlineSelect) {
       createIdeation.deadline = null;
     }
@@ -441,11 +394,10 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
       .pipe(take(1))
       .subscribe({
         next: (ideation) => {
-          //   this.TopicService.reloadTopic();
           this.ideation = ideation;
           if (updateTopicStatus) {
             const isDraft = (this.topic.status === this.TopicService.STATUSES.draft);
-            const updateTopic = Object.assign({}, this.topic);
+            const updateTopic = { ...this.topic };
             updateTopic.status = this.TopicService.STATUSES.ideation;
             this.TopicService.patch(updateTopic).pipe(take(1)).subscribe({
               next: (res) => {
@@ -479,7 +431,7 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
 
 
   updateIdeation(updateTopicStatus?: boolean) {
-    const updateIdeation = Object.assign({ topicId: this.topic.id }, this.ideation);
+    const updateIdeation = { topicId: this.topic.id, ...this.ideation };
     if (!this.deadlineSelect) {
       updateIdeation.deadline = null;
     }
@@ -535,16 +487,10 @@ export class IdeationCreateComponent extends TopicFormComponent implements Block
     this.deadline.setMinutes(this.endsAt.min);
     this.ideation.deadline = this.deadline;
     this.daysToVoteEnd();
-
-    // this.setReminderOptions();
   };
 
   override isNextDisabled(tabSelected: string | void) {
-    if (tabSelected === 'preview' && !this.TopicService.canDelete(this.topic)) {
-      return true;
-    } else if (!this.topic.title || !this.topic.description) {
-      return true;
-    } else if (tabSelected === 'ideation_system' && !this.ideation.question) {
+    if ((tabSelected === 'preview' && !this.TopicService.canDelete(this.topic)) || !this.topic.title || !this.topic.description || (tabSelected === 'ideation_system' && !this.ideation.question)) {
       return true;
     }
 

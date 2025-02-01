@@ -1,24 +1,4 @@
-<div class="idea" [ngClass]="{'moderated': idea.report.id, 'new': isNew}">
-  <!--div class="moderated_topic">
-    <div class="notification">
-      <div>
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="20" fill="#F39129" />
-          <path
-            d="M19.0645 8C18.4876 8 18.0304 8.48668 18.0664 9.06238L18.9414 23.0624C18.9743 23.5894 19.4114 24 19.9395 24H20.0605C20.5886 24 21.0257 23.5894 21.0586 23.0624L21.9336 9.06238C21.9696 8.48668 21.5124 8 20.9355 8H19.0645Z"
-            fill="white" />
-          <path
-            d="M20 31C21.1046 31 22 30.1046 22 29C22 27.8954 21.1046 27 20 27C18.8954 27 18 27.8954 18 29C18 30.1046 18.8954 31 20 31Z"
-            fill="white" />
-        </svg>
-      </div>
-      <div class="notification_title" translate="COMPONENTS.IDEABOX.NOTIFICATION_TITLE"></div>
-      <div class="notification_links">
-        <a translate="COMPONENTS.IDEABOX.NOTIFICATION_LNK_WHY" (click)="reportReasonDialog()"></a>
-        <a translate="COMPONENTS.IDEABOX.NOTIFICATION_LNK_VIEW" (click)="goToView($event)"></a>
-      </div>
-    </div>
-  </!--div-->
+<div class="idea" [ngClass]="{'moderated': idea.report.id, 'new': isNew, 'draft': isDraft(idea.status)}">
   <div class="deleted_idea_wrap" *ngIf="idea.report && idea.report.id || idea.deletedAt">
     <div class="deleted_idea_content_wrap">
       <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,112 +15,128 @@
           [innerHtml]="'COMPONENTS.IDEABOX.IDEA_FOUND_INAPPRIOPRIATE_BY' | translate:{usersFullName: idea.deletedBy?.name}">
         </div>
         <div class="buttons_wrap">
-          <a (click)="reportReasonDialog()" translate="COMPONENTS.IDEABOX.NOTIFICATION_LNK_WHY"></a>
-          <a (click)="goToView($event)" translate="COMPONENTS.IDEABOX.NOTIFICATION_LNK_VIEW"></a>
+          <a (click)="reportReasonDialog()">{{ 'COMPONENTS.IDEABOX.NOTIFICATION_LNK_WHY' | translate }}</a>
+          <a (click)="goToView()">{{ 'COMPONENTS.IDEABOX.NOTIFICATION_LNK_VIEW' | translate }}</a>
         </div>
       </ng-container>
       <ng-container *ngIf="idea.deletedBy?.id === idea.author.id && !idea.deletedReasonType && !idea.deletedReasonText">
         <div class="bold" [innerHtml]="'COMPONENTS.IDEABOX.IDEA_AUTHOR_REMOVED_IDEA' | translate">
         </div>
         <div class="buttons_wrap">
-          <a (click)="goToView($event)" translate="COMPONENTS.IDEABOX.NOTIFICATION_LNK_VIEW"></a>
+          <a (click)="goToView()">{{ 'COMPONENTS.IDEABOX.NOTIFICATION_LNK_VIEW' | translate }}</a>
         </div>
       </ng-container>
     </div>
   </div>
   <div class="idea_header">
     <div class="idea_header_left">
-      <div class="avatar">
-        <div class="tooltip_item" tooltip pos="top" [noIcon]="true">
-          <div class="content_description"> {{idea.author.name}}
-          </div>
-        </div>
-        <img *ngIf="idea.author.imageUrl" [src]="idea.author.imageUrl" />
-        <div class="profile_image_filler" *ngIf="!idea.author.imageUrl">
-          <cos-initials *ngIf="idea.author.name" [name]="idea.author.name || ''">
-          </cos-initials>
-        </div>
-      </div>
-      <div class="vertical_line_separator"></div>
-      <div class="like_wrap" [ngClass]="{selected: this.idea.votes.up.selected}">
-        <button class="btn_idea_like" [ngClass]="{disabled: !canVote()}" (click)="doIdeaVote(1)">
+      <ng-container *ngIf="!isDraft(idea.status)">
+        <div class="avatar">
           <div class="tooltip_item" tooltip pos="top" [noIcon]="true">
-            <div class="content_description" translate="COMPONENTS.IDEABOX.TOOLTIP_LIKE"></div>
+            <div class="content_description"> {{idea.author.name}}
+            </div>
           </div>
-          <!--div class="tooltip_item" tooltip [noIcon]="true">
+          <img *ngIf="idea.author.imageUrl" [src]="idea.author.imageUrl" [alt]="idea.author.name" />
+          <div class="profile_image_filler" *ngIf="!idea.author.imageUrl">
+            <cos-initials *ngIf="idea.author.name" [name]="idea.author.name || ''">
+            </cos-initials>
+          </div>
+        </div>
+        <div class="vertical_line_separator"></div>
+        <div class="like_wrap" [ngClass]="{selected: this.idea.votes.up.selected}">
+          <button class="btn_idea_like" [ngClass]="{disabled: !canVote()}" (click)="doIdeaVote(1)">
+            <div class="tooltip_item" tooltip pos="top" [noIcon]="true">
+              <div class="content_description" translate="COMPONENTS.IDEABOX.TOOLTIP_LIKE"></div>
+            </div>
+            <!--div class="tooltip_item" tooltip [noIcon]="true">
             <div class="content_title">Help on its way</div>
             <div class="content_description">Help text coming soon! Please tell us what help you were looking for.
             </div>
           </!--div-->
-          <svg *ngIf="!this.idea.votes.up.selected" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-            viewBox="0 0 16 16" fill="none">
+            <svg *ngIf="!this.idea.votes.up.selected" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              viewBox="0 0 16 16" fill="none">
+              <path
+                d="M8.12835 1.9685L4.5 6V13.5H11.3561C11.7482 13.5 12.1042 13.2708 12.2665 12.9138L14.4104 8.19719C14.4694 8.06724 14.5 7.92614 14.5 7.78339V7C14.5 6.44772 14.0523 6 13.5 6H9V2.30298C9 1.84474 8.4349 1.62789 8.12835 1.9685Z"
+                stroke="#2C3B47" stroke-width="1.5" />
+              <path d="M4.5 6H2C1.44772 6 1 6.44772 1 7V12.5C1 13.0523 1.44772 13.5 2 13.5H4.5" stroke="#2C3B47"
+                stroke-width="1.5" />
+            </svg>
+            <svg *ngIf="this.idea.votes.up.selected" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              viewBox="0 0 16 16" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M7.57088 1.46709C8.33725 0.61557 9.75 1.15769 9.75 2.30329V5.25032H13.5C14.4665 5.25032 15.25 6.03382 15.25 7.00032V7.78371C15.25 8.03352 15.1965 8.28044 15.0931 8.50787L12.9492 13.2245C12.6653 13.8492 12.0423 14.2503 11.3561 14.2503L4.25 14.2501V5.15696L7.57088 1.46709ZM2.75 5.25H2C1.0335 5.25 0.25 6.0335 0.25 7V12.5C0.25 13.4665 1.0335 14.25 2 14.25L2.75 14.25V5.25Z"
+                fill="#2C3B47" />
+            </svg>
+          </button>
+          <a class="like_counter_wrap" (click)="doShowVotersList()">
+            <div class="tooltip_item" tooltip pos="top" [noIcon]="true">
+              <div class="content_description" translate="COMPONENTS.IDEABOX.TOOLTIP_LIKE_COUNT"
+                [translateParams]="{count: idea.votes.up.count}"></div>
+            </div>
+            <span [innerHTML]="idea.votes.up.count"></span>
+          </a>
+        </div>
+        <ng-container *ngIf="(Auth.loggedIn$ | async)">
+          <div class="vertical_line_separator"></div>
+          <button class="btn_small_plain" (click)="$event.preventDefault();$event.stopPropagation();toggleFavourite();">
+            <div class="tooltip_item" tooltip pos="top" [noIcon]="true">
+              <div class="content_description" *ngIf="!idea.favourite" translate="COMPONENTS.IDEABOX.TOOLTIP_FAVOURITE"
+                [translateParams]="{count: idea.votes.up.count}"></div>
+              <div class="content_description" *ngIf="idea.favourite"
+                translate="COMPONENTS.IDEABOX.TOOLTIP_SAVED_TO_FAVOURITE"
+                [translateParams]="{count: idea.votes.up.count}">
+              </div>
+            </div>
+            <svg *ngIf="!idea.favourite" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+              fill="none">
+              <path
+                d="M8.33541 12.3292L8 12.1615L7.66459 12.3292L3.1118 14.6056C2.94558 14.6887 2.75 14.5678 2.75 14.382V2C2.75 1.86193 2.86193 1.75 3 1.75H13C13.1381 1.75 13.25 1.86193 13.25 2V14.382C13.25 14.5678 13.0544 14.6887 12.8882 14.6056L8.33541 12.3292Z"
+                stroke="#2C3B47" stroke-width="1.5" />
+            </svg>
+            <svg *ngIf="idea.favourite" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
+              fill="none">
+              <path
+                d="M8.33541 12.3292L8 12.1615L7.66459 12.3292L3.1118 14.6056C2.94558 14.6887 2.75 14.5678 2.75 14.382V2C2.75 1.86193 2.86193 1.75 3 1.75H13C13.1381 1.75 13.25 1.86193 13.25 2V14.382C13.25 14.5678 13.0544 14.6887 12.8882 14.6056L8.33541 12.3292Z"
+                fill="#2C3B47" stroke="#2C3B47" stroke-width="1.5" />
+            </svg>
+          </button>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="isDraft(idea.status)">
+        <div class="draft_label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path
-              d="M8.12835 1.9685L4.5 6V13.5H11.3561C11.7482 13.5 12.1042 13.2708 12.2665 12.9138L14.4104 8.19719C14.4694 8.06724 14.5 7.92614 14.5 7.78339V7C14.5 6.44772 14.0523 6 13.5 6H9V2.30298C9 1.84474 8.4349 1.62789 8.12835 1.9685Z"
-              stroke="#2C3B47" stroke-width="1.5" />
-            <path d="M4.5 6H2C1.44772 6 1 6.44772 1 7V12.5C1 13.0523 1.44772 13.5 2 13.5H4.5" stroke="#2C3B47"
-              stroke-width="1.5" />
+              d="M8.8143 4.18517L11.8147 7.18569L5.29947 13.7012L2.62438 13.9965C2.26626 14.0361 1.96369 13.7333 2.00354 13.3752L2.30118 10.6981L8.8143 4.18517ZM13.6704 3.73845L12.2616 2.3296C11.8222 1.89013 11.1095 1.89013 10.67 2.3296L9.34467 3.65501L12.3451 6.65553L13.6704 5.33011C14.1099 4.89042 14.1099 4.17791 13.6704 3.73845Z"
+              fill="#4D5C6A" />
           </svg>
-          <svg *ngIf="this.idea.votes.up.selected" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-            viewBox="0 0 16 16" fill="none">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M7.57088 1.46709C8.33725 0.61557 9.75 1.15769 9.75 2.30329V5.25032H13.5C14.4665 5.25032 15.25 6.03382 15.25 7.00032V7.78371C15.25 8.03352 15.1965 8.28044 15.0931 8.50787L12.9492 13.2245C12.6653 13.8492 12.0423 14.2503 11.3561 14.2503L4.25 14.2501V5.15696L7.57088 1.46709ZM2.75 5.25H2C1.0335 5.25 0.25 6.0335 0.25 7V12.5C0.25 13.4665 1.0335 14.25 2 14.25L2.75 14.25V5.25Z"
-              fill="#2C3B47" />
-          </svg>
-        </button>
-        <a class="like_counter_wrap" (click)="doShowVotersList()">
-          <div class="tooltip_item" tooltip pos="top" [noIcon]="true">
-            <div class="content_description" translate="COMPONENTS.IDEABOX.TOOLTIP_LIKE_COUNT"
-              [translateParams]="{count: idea.votes.up.count}"></div>
-          </div>
-          <span [innerHTML]="idea.votes.up.count"></span>
-        </a>
-      </div>
-      <ng-container *ngIf="(Auth.loggedIn$ | async)">
-        <div class="vertical_line_separator"></div>
-        <button class="btn_small_plain" (click)="$event.preventDefault();$event.stopPropagation();toggleFavourite();">
-          <div class="tooltip_item" tooltip pos="top" [noIcon]="true">
-            <div class="content_description" *ngIf="!idea.favourite" translate="COMPONENTS.IDEABOX.TOOLTIP_FAVOURITE"
-              [translateParams]="{count: idea.votes.up.count}"></div>
-            <div class="content_description" *ngIf="idea.favourite" translate="COMPONENTS.IDEABOX.TOOLTIP_SAVED_TO_FAVOURITE"
-              [translateParams]="{count: idea.votes.up.count}"></div>
-          </div>
-          <svg *ngIf="!idea.favourite" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-            fill="none">
-            <path
-              d="M8.33541 12.3292L8 12.1615L7.66459 12.3292L3.1118 14.6056C2.94558 14.6887 2.75 14.5678 2.75 14.382V2C2.75 1.86193 2.86193 1.75 3 1.75H13C13.1381 1.75 13.25 1.86193 13.25 2V14.382C13.25 14.5678 13.0544 14.6887 12.8882 14.6056L8.33541 12.3292Z"
-              stroke="#2C3B47" stroke-width="1.5" />
-          </svg>
-          <svg *ngIf="idea.favourite" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"
-            fill="none">
-            <path
-              d="M8.33541 12.3292L8 12.1615L7.66459 12.3292L3.1118 14.6056C2.94558 14.6887 2.75 14.5678 2.75 14.382V2C2.75 1.86193 2.86193 1.75 3 1.75H13C13.1381 1.75 13.25 1.86193 13.25 2V14.382C13.25 14.5678 13.0544 14.6887 12.8882 14.6056L8.33541 12.3292Z"
-              fill="#2C3B47" stroke="#2C3B47" stroke-width="1.5" />
-          </svg>
-        </button>
+          <span translate="COMPONENTS.IDEABOX.IDEA_DRAFT"></span>
+        </div>
       </ng-container>
     </div>
     <div class="idea_header_right" *ngIf="(Auth.loggedIn$ | async) || isEdited()">
       <div class="dropdown button_dropdown" [cosDropdown]>
         <button class="btn_small_plain icon">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M17.334 11.9993C17.334 11.266 16.734 10.666 16.0007 10.666C15.2673 10.666 14.6673 11.266 14.6673 11.9993C14.6673 12.7327 15.2673 13.3327 16.0007 13.3327C16.734 13.3327 17.334 12.7327 17.334 11.9993ZM17.334 19.9993C17.334 19.266 16.734 18.666 16.0007 18.666C15.2673 18.666 14.6673 19.266 14.6673 19.9993C14.6673 20.7327 15.2673 21.3327 16.0007 21.3327C16.734 21.3327 17.334 20.7327 17.334 19.9993ZM16.0007 14.666C16.734 14.666 17.334 15.266 17.334 15.9993C17.334 16.7327 16.734 17.3327 16.0007 17.3327C15.2673 17.3327 14.6673 16.7327 14.6673 15.9993C14.6673 15.266 15.2673 14.666 16.0007 14.666Z"
+              d="M9.33301 4.0013C9.33301 3.26797 8.73301 2.66797 7.99967 2.66797C7.26634 2.66797 6.66634 3.26797 6.66634 4.0013C6.66634 4.73464 7.26634 5.33464 7.99967 5.33464C8.73301 5.33464 9.33301 4.73464 9.33301 4.0013ZM9.33301 12.0013C9.33301 11.268 8.73301 10.668 7.99967 10.668C7.26634 10.668 6.66634 11.268 6.66634 12.0013C6.66634 12.7346 7.26634 13.3346 7.99967 13.3346C8.73301 13.3346 9.33301 12.7346 9.33301 12.0013ZM7.99967 6.66797C8.73301 6.66797 9.33301 7.26797 9.33301 8.0013C9.33301 8.73464 8.73301 9.33463 7.99967 9.33463C7.26634 9.33463 6.66634 8.73464 6.66634 8.0013C6.66634 7.26797 7.26634 6.66797 7.99967 6.66797Z"
               fill="#2C3B47" />
           </svg>
         </button>
         <div class="options button_options">
-          <ng-container *ngIf="(Auth.loggedIn$ | async)">
+          <ng-container *ngIf="(Auth.loggedIn$ | async) && !isDraft(idea.status)">
             <button class="option" (click)="toggleFavourite()">
               <div class="icon_wrap">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M8.33541 12.3292L8 12.1615L7.66459 12.3292L3.1118 14.6056C2.94558 14.6887 2.75 14.5678 2.75 14.382V2C2.75 1.86193 2.86193 1.75 3 1.75H13C13.1381 1.75 13.25 1.86193 13.25 2V14.382C13.25 14.5678 13.0544 14.6887 12.8882 14.6056L8.33541 12.3292Z" fill="#2C3B47" stroke="#2C3B47" stroke-width="1.5"/>
-                  </svg>
+                  <path
+                    d="M8.33541 12.3292L8 12.1615L7.66459 12.3292L3.1118 14.6056C2.94558 14.6887 2.75 14.5678 2.75 14.382V2C2.75 1.86193 2.86193 1.75 3 1.75H13C13.1381 1.75 13.25 1.86193 13.25 2V14.382C13.25 14.5678 13.0544 14.6887 12.8882 14.6056L8.33541 12.3292Z"
+                    fill="#2C3B47" stroke="#2C3B47" stroke-width="1.5" />
+                </svg>
               </div>
               <span *ngIf="!idea.favourite" translate="COMPONENTS.IDEABOX.OPTION_FAVOURITE"></span>
               <span *ngIf="idea.favourite" translate="COMPONENTS.IDEABOX.OPTION_UNFAVOURITE"></span>
             </button>
           </ng-container>
-          <ng-container *ngIf="canEditTopic()">
+          <ng-container *ngIf="canEditTopic() && !isDraft(idea.status)">
             <div class="line_separator"></div>
             <button class="option" (click)="addToFolder()">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -152,7 +148,7 @@
             </button>
           </ng-container>
           <ng-container *ngIf="canEditIdea()">
-            <div class="line_separator"></div>
+            <div class="line_separator" *ngIf="!isDraft(idea.status)"></div>
             <button class="option" (click)="ideaEditMode()">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -162,7 +158,7 @@
               <span translate="COMPONENTS.IDEABOX.OPTION_EDIT"></span>
             </button>
           </ng-container>
-          <ng-container *ngIf="Auth.loggedIn$">
+          <ng-container *ngIf="Auth.loggedIn$ && !isDraft(idea.status)">
             <div class="line_separator"></div>
             <button class="option" (click)="doIdeaReport()"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -174,7 +170,7 @@
               <span translate="COMPONENTS.IDEABOX.OPTION_REPORT"></span>
             </button>
           </ng-container>
-          <ng-container *ngIf="isEdited()">
+          <ng-container *ngIf="isEdited() && !isDraft(idea.status)">
             <div class="line_separator"></div>
             <button class="option" (click)="idea.showEdits = !idea.showEdits">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -209,7 +205,7 @@
       </div>
     </div>
   </div>
-  <a class="idea_content" (click)="(!idea.report.id)? goToView($event): ''">
+  <a class="idea_content" (click)="(!idea.report.id)? goToView(): ''">
     <div class="statement" [innerHTML]="idea.statement"></div>
     <!--button class="btn_like_wrap" [ngClass]="{selected: this.idea.votes.up.selected, disabled: !canVote()}" (click)="$event.preventDefault();$event.stopPropagation();doIdeaVote(1);">
       <div class="btn_medium_plain btn_like">
@@ -248,10 +244,11 @@
     </!--button-->
   </a>
   <div class="idea_footer">
-    <div class="date">{{idea.createdAt | date: 'YYYY-MM-dd HH:mm'}}</div>
-    <div class="replies_count">
-      <a translate="COMPONENTS.IDEABOX.REPLIES" [translateParams]="{count: idea.replies.count}"
-        (click)="(!idea.report.id)? goToView($event, true): ''"></a>
+    <div class="date" *ngIf="!isDraft(idea.status)">{{idea.createdAt | date: 'YYYY-MM-dd HH:mm'}}</div>
+    <div class="date" *ngIf="isDraft(idea.status)">{{'COMPONENTS.IDEABOX.DRAFT_UPDATED_AT' | translate: {date:
+      (idea.updatedAt | date: 'YYYY-MM-dd HH:mm')} }}</div>
+    <div class="replies_count" *ngIf="!isDraft(idea.status)">
+      <a (click)="(!idea.report.id)? goToView(true): ''">{{'COMPONENTS.IDEABOX.REPLIES' | translate: {count: idea.replies.count} }}</a>
     </div>
   </div>
 </div>

@@ -127,6 +127,7 @@
       "CHARACTER_LIMIT": "@:COMPONENTS.GROUP_INVITE.CHARACTER_LIMIT",
       "PLACEHOLDER_EXPLAIN_YOUR_IDEA": "Explain your idea",
       "BTN_ADD_IMAGE": "Add image",
+      "BTN_IDEA_DRAFT": "@:VIEWS.TOPIC_CREATE.FOOTER_BTN_SAVE_AS_DRAFT",
       "BTN_IDEA_POST": "Add your idea",
       "MSG_SUCCESS": "Idea successfully posted",
       "MSG_ERROR_SUBJECT": "Idea heading must be 1 to {{chars}} characters long.",
@@ -346,6 +347,7 @@
       "CHARACTER_LIMIT": "@:COMPONENTS.GROUP_INVITE.CHARACTER_LIMIT",
       "PLACEHOLDER_EXPLAIN_YOUR_IDEA": "@:COMPONENTS.ADD_IDEA.PLACEHOLDER_EXPLAIN_YOUR_IDEA",
       "BTN_ADD_IMAGE": "@:COMPONENTS.ADD_IDEA.BTN_ADD_IMAGE",
+      "BTN_IDEA_DRAFT": "@:COMPONENTS.ADD_IDEA.BTN_IDEA_DRAFT",
       "BTN_IDEA_POST": "Update idea",
       "MSG_ERROR_SUBJECT": "@:COMPONENTS.ADD_IDEA.MSG_ERROR_SUBJECT",
       "MSG_ERROR_DESCRIPTION": "@:COMPONENTS.ADD_IDEA.MSG_ERROR_DESCRIPTION"
@@ -443,6 +445,7 @@
       "LNK_CANCEL": "@:LNK_CANCEL"
     },
     "IDEABOX": {
+      "IDEA_DRAFT": "Draft",
       "OPTION_EDIT": "Edit idea",
       "OPTION_FAVOURITE": "@:VIEWS.TOPICS_TOPICID.OPTION_FAVOURITE",
       "OPTION_UNFAVOURITE": "@:VIEWS.TOPICS_TOPICID.OPTION_UNFAVOURITE",
@@ -454,6 +457,7 @@
       "OPTION_ADD_TO_FOLDER": "Add to folder",
       "OPTION_REPORT": "Report to admin",
       "OPTION_REMOVE": "Remove idea",
+      "DRAFT_UPDATED_AT": "Last updated: {{date}}",
       "REPLIES": "{{count}} replies",
       "NOTIFICATION_TITLE": "This idea was hidden by a moderator",
       "NOTIFICATION_LNK_WHY": "@:VIEWS.TOPICS_TOPICID.ARGUMENT_WHY",

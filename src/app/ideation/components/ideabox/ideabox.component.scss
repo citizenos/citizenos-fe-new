@@ -29,6 +29,28 @@
       background-color: var(--color-success-background);
     }
   }
+
+  &.draft {
+    background-color: var(--color-surfaces);
+    padding: 0;
+
+    .idea_header {
+      padding: 8px 16px 8px 16px;
+      background-color: var(--color-surface-contrast);
+      height: 48px;
+      border-radius: 16px 16px 0 0;
+    }
+    .idea_content {
+      padding: 0 16px;
+    }
+    .idea_footer {
+      padding: 0 16px 16px 16px;
+    }
+    .btn_like_wrap {
+      background-color: var(--color-background);
+    }
+  }
+
   &:hover {
     text-decoration: none;
     box-shadow: 0px 12px 16px 0px rgba(50, 85, 112, 0.10), 0px 8px 20px 0px rgba(220, 231, 240, 0.30);
@@ -44,6 +66,21 @@
     .idea_header_left {
       display: flex;
       gap: 12px;
+      align-items: center;
+
+      .draft_label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        span {
+          font-weight: 600;
+          color: var(--color-argument-info);
+        }
+        svg {
+          fill: var(--color-argument-info);
+        }
+      }
+
       .avatar {
         display: flex;
         justify-content: center;
@@ -83,7 +120,7 @@
       }
       .vertical_line_separator {
         background-color: var(--color-text);
-        margin: 4px 0;
+        height: 24px;
       }
 
       .btn_small_plain {

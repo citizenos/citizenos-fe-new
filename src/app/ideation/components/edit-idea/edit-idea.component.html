@@ -50,7 +50,7 @@
 
           <div class="image" *ngFor="let image of newImages; index as index">
             <div class="image_data">
-              <img [src]="image.link" [alt]="image.name"/>
+              <img [src]="image.link" [alt]="image.name" />
               <a class="name">{{image.name}}</a>
             </div>
             <button class="btn_small_plain icon" (click)="removeNewImage(index)">
@@ -103,7 +103,10 @@
         </svg>
         <span translate="COMPONENTS.EDIT_IDEA.BTN_ADD_IMAGE"></span>
       </button>
-      <button class="btn_medium_submit icon" (click)="postIdea()" [ngClass]="{disabled: ideaForm.invalid}">
+      <button class="btn_medium_secondary icon" (click)="draftIdea()" [ngClass]="{disabled: ideaForm.invalid}">
+        <span class="btn_text" translate="COMPONENTS.EDIT_IDEA.BTN_IDEA_DRAFT"></span>
+      </button>
+      <button class="btn_medium_submit icon" (click)="publishIdea()" [ngClass]="{disabled: ideaForm.invalid}">
         <span class="btn_text" translate="COMPONENTS.EDIT_IDEA.BTN_IDEA_POST"></span>
       </button>
     </div>
